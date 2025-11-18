@@ -70,6 +70,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  flutter_spring_animation:
+    dependency: "direct main"
+    description:
+      name: flutter_spring_animation
+      sha256: "2a050fcb68bebe9cd520f44f6c9be4a178606bb11e8754b7f33c39b3e6783bb3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
