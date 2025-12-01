@@ -2,14 +2,26 @@ import 'package:first_app/main.dart';
 import 'package:first_app/quiz_app/quiz.dart';
 import 'package:flutter/material.dart';
 
-class AppBackgroundQuiz extends StatelessWidget {
+class AppBackgroundQuiz extends StatefulWidget {
   final List<Widget> children;
 
   const AppBackgroundQuiz({super.key, required this.children});
 
   @override
+  State<StatefulWidget> createState() {
+    return _AppBackgroundQuizState();
+  }
+}
+
+class _AppBackgroundQuizState extends State<AppBackgroundQuiz> {
+  bool isHovering = false;
+  double turns = 1.0;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      height: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage("assets/quiz/quiz-logo.png"),
@@ -25,22 +37,64 @@ class AppBackgroundQuiz extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      child: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Flexible(
-            //   child: Opacity(
-            //     opacity: 0.5,
-            //     child: Image.asset(
-            //       "assets/quiz/quiz-logo.png",
-            //       fit: BoxFit.contain,
-            //     ),
-            //   ),
-            // ),
-            ...this.children,
-          ],
+      child: Container(
+        margin: const EdgeInsets.all(40),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...widget.children,
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(206, 95, 93, 93),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RootScaffold(Quiz()),
+                    ),
+                  );
+                },
+                icon: AnimatedRotation(
+                            turns: turns,
+                            duration: const Duration(milliseconds: 500),
+                            child: const Icon(
+                              Icons.restart_alt,
+                              color: Color.fromARGB(255, 242, 245, 245),
+                            ),
+                          ),
+
+                onHover: (value) => {
+                  setState(() {
+                    // isHovering = value;
+                    turns = value ? 0.5 : 0.0;
+                    // isHovering
+                    //     ? AnimatedRotation(
+                    //         turns: turns,
+                    //         duration: const Duration(milliseconds: 2000),
+                    //         child: const Icon(
+                    //           Icons.restart_alt,
+                    //           color: Color.fromARGB(255, 242, 245, 245),
+                    //         ),
+                    //       )
+                    //     : const Icon(
+                    //         Icons.restart_alt,
+                    //         color: Color.fromARGB(255, 242, 245, 245),
+                    //       );
+                  })
+                },
+
+                label: Text(
+                  'Restart Quiz',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: const Color.fromARGB(255, 56, 170, 161),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -52,13 +106,7 @@ class QuizApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-    //  MaterialApp(
-    //   title: 'Quiz App',
-    //   theme: ThemeData(primarySwatch: Colors.blue),
-    //   home: MyHomePage(title: 'Flutter Demo Home Page'),
-    // );
-    MyHomePage(title: 'Flutter Demo Home Page');
+    return MyHomePage(title: 'Flutter Demo Home Page');
   }
 }
 
@@ -90,14 +138,32 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         SizedBox(height: heghtScreen * 0.2),
         SizedBox(
-          width: 200.0, // Set desired width
-          height: 50.0, // Set desired height
+          // width: 100.0, // Set desired width
+          // height: 50.0, // Set desired height
           child: OutlinedButton.icon(
-            autofocus: true,
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RootScaffold(Quiz())),
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      RootScaffold(Quiz()),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.slowMiddle;
+
+                        var tween = Tween(
+                          begin: begin,
+                          end: end,
+                        ).chain(CurveTween(curve: curve));
+
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                ),
               );
             },
             style: OutlinedButton.styleFrom(
@@ -118,37 +184,5 @@ class _MyHomePageState extends State<MyHomePage> {
       //   ),
       // ),
     );
-    // drawer: Drawer(
-    //   child: ListView(
-    //     padding: EdgeInsets.zero,
-    //     children: <Widget>[
-    //       const DrawerHeader(
-    //         decoration: BoxDecoration(color: Colors.blue),
-    //         child: Text(
-    //           'Main Menu',
-    //           style: TextStyle(color: Colors.white, fontSize: 24),
-    //         ),
-    //       ),
-    //       ListTile(
-    //         leading: const Icon(Icons.home),
-    //         title: const Text('Home'),
-    //         onTap: () {
-    //           Navigator.pop(context);
-    //           Navigator.pushReplacement(
-    //             context,
-    //             MaterialPageRoute(builder: (context) => const MainApp(), settings: const RouteSettings(name: '/main')),
-    //           );
-    //         },
-    //       ),
-    //       ListTile(
-    //         leading: const Icon(Icons.settings),
-    //         title: const Text('Settings'),
-    //         onTap: () {
-    //           Navigator.of(context, rootNavigator: true).maybePop();
-    //         },
-    //       ),
-    //     ],
-    //   ),
-    // ),
   }
 }

@@ -1,6 +1,8 @@
 import 'package:first_app/basic_app/gradient_container.dart';
 import 'package:first_app/basic_app/styled/styled_text.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
+import 'package:first_app/quiz_app/util/app_metrics.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:collection';
 
@@ -34,6 +36,12 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+        },
+      ),
       title: 'Main App',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const RootScaffold(MyHomePage(title: 'Flutter Demo Home Page')),
@@ -47,11 +55,19 @@ class RootScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final appBar = AppBar(
+      backgroundColor: Theme.of(context).colorScheme.surfaceTint,
+      title: const Text('Main App Scaffold'),
+    );
+
+    // Set global metrics so các màn khác có thể dùng
+    AppMetrics.instance.setHeights(
+      appBar: appBar.preferredSize.height,
+      statusBar: MediaQuery.of(context).padding.top,
+    );
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
-        title: const Text('Main App Scaffold'),
-      ),
+      appBar: appBar,
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

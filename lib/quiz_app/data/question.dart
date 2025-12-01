@@ -1,4 +1,3 @@
-import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/models/quiz_question.dart';
 
 const questions = [
@@ -41,6 +40,15 @@ const questions = [
       'The UI is not updated',
       'The UI is updated',
       'The closest StatefulWidget is updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
+      'Any nested StatefulWidgets are updated',
       'Any nested StatefulWidgets are updated',
     ],
   ),
