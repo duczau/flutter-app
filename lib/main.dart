@@ -1,12 +1,15 @@
 import 'package:first_app/basic_app/gradient_container.dart';
 import 'package:first_app/basic_app/styled/styled_text.dart';
+import 'package:first_app/expense_app/expenses.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'dart:collection';
 
-void main() {
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(
     // GradientApp(),
     // QuizApp()
@@ -17,7 +20,7 @@ void main() {
 final Map<String, WidgetBuilder> listWitget = {
   'Quiz': (context) => QuizApp(),
   'Gradient': (context) => GradientApp(),
-  'Counter': (context) => StyledText('Counter'),
+  'Expenses Tracker': (context) => Expenses(),
   'Stateful Widget': (context) => StyledText('Stateful Widget'),
   'Stateless Widget': (context) => StyledText('Stateless Widget'),
 };

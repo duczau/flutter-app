@@ -53,7 +53,7 @@ class GradientApp extends StatelessWidget {
   @override
   StatelessElement createElement() {
     if (kDebugMode) {
-      print(super.createElement());
+      print(super.createElement().toString());
       print(kDebugMode);
     }
     return super.createElement();

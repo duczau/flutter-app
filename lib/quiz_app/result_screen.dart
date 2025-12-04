@@ -64,61 +64,96 @@ class _ResultScreenState extends State<ResultScreen> {
     }
     return Expanded(
       // child: SizedBox(
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Center(
-              // width: double.maxFinite,
-              // widthFactor: 0.5,
-              child: Text(
-                'Result !!!',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montez(
-                  fontSize: 34,
-                  fontStyle: FontStyle.italic,
-                  color: const Color.fromARGB(251, 255, 255, 255),
-                ),
+      child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Center(
+            // width: double.maxFinite,
+            // widthFactor: 0.5,
+            child: Text(
+              'Result !!!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montez(
+                fontSize: 34,
+                fontStyle: FontStyle.italic,
+                color: const Color.fromARGB(251, 255, 255, 255),
               ),
             ),
-            Center(
-              child: Text(
-                'You answered $correctAnswers out of ${widget.choosenAnswers.length} questions correctly!',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.italianno(
-                  fontSize: 38,
-                  color: const Color.fromARGB(250, 49, 165, 55),
-                ),
+          ),
+          Center(
+            child: Text(
+              'You answered $correctAnswers out of ${widget.choosenAnswers.length} questions correctly!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.italianno(
+                fontSize: 38,
+                color: const Color.fromARGB(250, 49, 165, 55),
               ),
             ),
-            SizedBox(height: 20),
-            SingleChildScrollView(
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            // height: ,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: widget.choosenAnswers.map((data) {
                   final isCorrect =
                       data['correct_answer'] == data['user_answer'];
-                  return ListTile(
-                    title: Text(
-                      data['question'] ?? '',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                  return Row(
+                    spacing: 100,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isCorrect
+                              ? const Color.fromARGB(255, 166, 208, 243)
+                              : const Color.fromARGB(255, 128, 69, 124),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Text(
+                          data['question_index'] ?? '',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isCorrect ? Colors.green : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    subtitle: Text(
-                      'Your answer: ${data['user_answer'] ?? ''} \nCorrect answer: ${data['correct_answer'] ?? ''}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: isCorrect ? Colors.green : Colors.red,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['question'] ?? '',
+                              softWrap: true,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Your answer: ${data['user_answer'] ?? ''} \nCorrect answer: ${data['correct_answer'] ?? ''}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: isCorrect ? Colors.green : Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   );
                 }).toList(),
               ),
             ),
-            SizedBox(height: 70),
-          ],
-        ),
+          ),
+
+          SizedBox(height: 70),
+        ],
+      ),
       // ),
     );
   }

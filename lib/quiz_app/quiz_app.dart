@@ -44,6 +44,7 @@ class _AppBackgroundQuizState extends State<AppBackgroundQuiz> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ...widget.children,
+              SizedBox(height: 20),
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(206, 95, 93, 93),
