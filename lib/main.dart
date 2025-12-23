@@ -1,6 +1,6 @@
 import 'package:first_app/basic_app/gradient_container.dart';
 import 'package:first_app/basic_app/styled/styled_text.dart';
-import 'package:first_app/expense_app/expenses.dart';
+import 'package:first_app/expense_app/expenses_app.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
 import 'package:flutter/gestures.dart';
