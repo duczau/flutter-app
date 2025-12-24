@@ -32,6 +32,15 @@ class Expense {
        assert(title.isNotEmpty, 'Title cannot be empty'),
        assert(amount > 0, 'Amount must be greater than zero');
 
+  Expense.addDate({
+    required this.title,
+    required this.amount,
+    required this.category,
+    required this.date,
+  }) : id = uuid.v7(), 
+       assert(title.isNotEmpty, 'Title cannot be empty'),
+       assert(amount > 0, 'Amount must be greater than zero');
+
   String get formattedDate {
     return '${date.day}/${date.month}/${date.year}';
   }

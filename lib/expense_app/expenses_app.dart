@@ -39,6 +39,28 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void _onRemoveExpense(Expense removeExpense) {
+    final expenseIndex = _registeredExpenses.indexOf(removeExpense);
+    setState(() {
+      _registeredExpenses.remove(removeExpense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Deleted ${removeExpense.title}'),
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, removeExpense);
+            });
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,6 +84,7 @@ class _ExpensesState extends State<Expenses> {
           IconButton(
             onPressed: () {
               showModalBottomSheet(
+                isScrollControlled: true,
                 context: context,
                 builder: (ctx) => NewExpense(onAddExpense: _onAddExpense),
               );
@@ -71,7 +94,7 @@ class _ExpensesState extends State<Expenses> {
             iconSize: 35,
           ),
           const SizedBox(height: 8),
-          Expanded(child: ExpenseList(_registeredExpenses)),
+          Expanded(child: ExpenseList(_registeredExpenses, _onRemoveExpense)),
         ],
       ),
       // ),

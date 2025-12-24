@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key, required this.onAddExpense});
 
-  final void Function (Expense newExpense) onAddExpense;
+  final void Function(Expense newExpense) onAddExpense;
 
   @override
   State<NewExpense> createState() {
@@ -13,7 +13,6 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
-  
   // alway dispose controllers because they use resources even after widget is destroyed
   final _costController = TextEditingController();
   String _titleInput = '';
@@ -41,20 +40,31 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  void _saveExpense() {
+  void _saveExpense(BuildContext context) {
     final cost = double.tryParse(_costController.text);
     final isCostValid = cost == null || cost < 0;
     if (_titleInput.trim().isEmpty || isCostValid) {
-      showDialog(context: context, builder: (ctx) => AlertDialog(
-        title: Text("Invalid Input"),
-        content: Text("Title is empty or Cost invalid !!"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Ok'))
-        ],
-      ));
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text("Invalid Input"),
+          content: Text("Title is empty or Cost invalid !!"),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Ok')),
+          ],
+        ),
+      );
       return;
     }
-    widget.onAddExpense(Expense(title: _titleInput.trim(), amount: cost, category: _selectedCategory));
+    widget.onAddExpense(
+      Expense.addDate(
+        title: _titleInput.trim(),
+        amount: cost,
+        category: _selectedCategory,
+        date: _selectedDate ?? DateTime.now(),
+      ),
+    );
+    Navigator.pop(context);
   }
 
   String _formatDate(DateTime date) {
@@ -70,7 +80,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).viewInsets.bottom),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -145,8 +155,7 @@ class _NewExpenseState extends State<NewExpense> {
                 ElevatedButton(
                   onPressed: () {
                     print('Submitted: ${_costController.text}');
-                    Navigator.pop(context);
-                    _saveExpense();
+                    _saveExpense(context);
                   },
                   child: Text('Save Expense'),
                 ),

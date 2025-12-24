@@ -46,7 +46,7 @@ class MainApp extends StatelessWidget {
         },
       ),
       title: 'Main App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 37, 106, 146)),
       home: const RootScaffold(MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
