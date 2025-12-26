@@ -63,7 +63,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         // choosenAnswers.add(value)
       });
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => RootScaffold(Quiz.result(choosenAnswers)),

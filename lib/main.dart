@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-Future<void> main() async {
+var kDarkColorTheme = const Color.fromARGB(255, 18, 18, 18);
+var themeMode = ThemeMode.light;
+
+void main() async {
   await dotenv.load(fileName: ".env");
   runApp(
-    // GradientApp(),
-    // QuizApp()
     MainApp(),
   );
 }
@@ -33,20 +34,79 @@ final Map<String, WidgetBuilder> listWitget = {
 //   'Stateless Widget': const StyledText('Stateless Widget'),
 // };
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _MainAppState();
+  }
+}
+
+class _MainAppState extends State<MainApp> {
+  void _toggleTheme() {
+    setState(() {
+      themeMode = themeMode == ThemeMode.dark
+          ? ThemeMode.light
+          : ThemeMode.dark;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: themeMode,
+      darkTheme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: kDarkColorTheme,
+      ),
       scrollBehavior: MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-        },
+        dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
       ),
       title: 'Main App',
-      theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 37, 106, 146)),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromARGB(255, 37, 106, 146),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 13, 134, 74),
+        ),
+        cardTheme: const CardThemeData(
+          color: Color.fromARGB(206, 128, 179, 128),
+          shadowColor: Color.fromARGB(255, 96, 71, 236),
+          elevation: 10,
+        ),
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            fontSize: 24,
+            color: Color.fromARGB(255, 141, 21, 21),
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold,
+          ),
+          titleSmall: TextStyle(
+            fontSize: 15,
+            color: Color.fromARGB(255, 1, 69, 172),
+            fontWeight: FontWeight.w300,
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 20,
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontFamily: 'Roboto',
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 16,
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontFamily: 'Roboto',
+            fontStyle: FontStyle.italic,
+          ),
+          bodySmall: TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontFamily: 'Roboto',
+          ),
+        ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 96, 59, 181),
+          secondary: const Color.fromARGB(255, 181, 59, 96),
+        ),
+      ),
       home: const RootScaffold(MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
@@ -58,7 +118,6 @@ class RootScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final appBar = AppBar(
       backgroundColor: Theme.of(context).colorScheme.surfaceTint,
       title: const Text('Main App Scaffold'),
@@ -72,41 +131,82 @@ class RootScaffold extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
+            // ✅ Header cố định (không scroll)
+            // const DrawerHeader(
+            //   padding: EdgeInsets.zero,
+            //   decoration: BoxDecoration(color: Colors.blue, ),
+            //   child: Text(
+            //     'Main Menu',
+            //     style: TextStyle(color: Colors.white, fontSize: 24),
+            //   ),
+            // ),
+            Container(
+              height: 100,
+              width: double.infinity,
+              color: Colors.blue,
+              // padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+              child: const Text(
                 'Main Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pushAndRemoveUntil(
-                  // context,
-                  MaterialPageRoute(
-                    builder: (context) => const RootScaffold(
-                      MyHomePage(title: 'Flutter Demo Home Page'),
-                    ),
-                    settings: const RouteSettings(name: '/main'),
-                  ),
-                  (route) => false,
-                );
-              },
-            ),
 
+            // ✅ Nội dung scroll
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.home),
+                    title: const Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.of(context).pushAndRemoveUntil(
+                        // context,
+                        MaterialPageRoute(
+                          builder: (context) => const RootScaffold(
+                            MyHomePage(title: 'Flutter Demo Home Page'),
+                          ),
+                          settings: const RouteSettings(name: '/main'),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  ),
+
+                  ListTile(
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Back'),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      await Navigator.maybePop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Divider(indent: 16.0, endIndent: 16.0),
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Back'),
-              onTap: () async {
-                Navigator.pop(context);
-                await Navigator.maybePop(context);
-              },
+              leading: Icon(
+                themeMode == ThemeMode.dark
+                    ? Icons.dark_mode
+                    : Icons.light_mode,
+              ),
+              title: const Text(
+                'Dark Mode',
+                strutStyle: StrutStyle(height: 1.5),
+              ),
+              trailing: Switch(
+                value: themeMode == ThemeMode.dark,
+                onChanged: (bool value) {
+                  (context as Element)
+                      .findAncestorStateOfType<_MainAppState>()
+                      ?._toggleTheme();
+                  // Navigator.pop(context); // Đóng drawer
+                },
+              ),
             ),
           ],
         ),
@@ -149,10 +249,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Roboto',
-                  color: const Color.fromARGB(235, 2, 11, 88),
+                  color: Theme.of(context).textTheme.titleLarge?.color,
                 ),
               ),
-              Divider(thickness: 10, color: Colors.black54, radius: BorderRadiusDirectional.circular(1)),
+              Divider(
+                thickness: 10,
+                color: Colors.black54,
+                radius: BorderRadiusDirectional.circular(1),
+              ),
               SizedBox(height: widthScreen * 0.05),
               ...listWitget.entries.map((e) {
                 String key = e.key;

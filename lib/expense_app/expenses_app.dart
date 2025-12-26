@@ -1,3 +1,4 @@
+import 'package:first_app/expense_app/chart/chart.dart';
 import 'package:first_app/expense_app/expense_list.dart';
 import 'package:first_app/expense_app/models/expense.dart';
 import 'package:first_app/expense_app/new_expense.dart';
@@ -69,8 +70,8 @@ class _ExpensesState extends State<Expenses> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color.fromARGB(255, 153, 104, 104),
-            const Color.fromARGB(199, 48, 150, 119),
+            const Color.fromARGB(255, 172, 105, 157),
+            const Color.fromARGB(198, 164, 172, 169),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -81,6 +82,7 @@ class _ExpensesState extends State<Expenses> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          Chart(expenses: _registeredExpenses),
           IconButton(
             onPressed: () {
               showModalBottomSheet(
@@ -90,8 +92,8 @@ class _ExpensesState extends State<Expenses> {
               );
             },
             icon: const Icon(Icons.add_box_rounded),
-            color: Colors.deepPurpleAccent,
-            iconSize: 35,
+            color: const Color.fromARGB(255, 159, 247, 159),
+            iconSize: 36,
           ),
           const SizedBox(height: 8),
           Expanded(child: ExpenseList(_registeredExpenses, _onRemoveExpense)),

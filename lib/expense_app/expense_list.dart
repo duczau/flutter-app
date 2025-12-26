@@ -31,6 +31,16 @@ class ExpenseList extends StatelessWidget {
         // );
         Dismissible(
           key: ValueKey(expense.id),
+          background: Container(
+            color: const Color.fromARGB(255, 230, 166, 166),
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
           confirmDismiss: (direction) async {
             if (direction == DismissDirection.endToStart) {
               return true;
