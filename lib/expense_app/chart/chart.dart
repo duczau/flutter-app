@@ -32,8 +32,26 @@ class Chart extends StatelessWidget {
     return maxTotalExpense;
   }
 
+  List<ChartBar> chartBars(double maxExpense) {
+    final List<ChartBar> chartBars = [];
+
+    for (final bucket in buckets) {
+      chartBars.add(
+        ChartBar(
+          fill: bucket.totalExpenses == 0
+              ? 0
+              : bucket.totalExpenses / maxExpense,
+        ),
+      );
+    }
+
+    return chartBars;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final maxTotal = maxTotalExpense;
+
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Container(
@@ -61,12 +79,7 @@ class Chart extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                for (final bucket in buckets) // alternative to map()
-                  ChartBar(
-                    fill: bucket.totalExpenses == 0
-                        ? 0
-                        : bucket.totalExpenses / maxTotalExpense,
-                  )
+                ...chartBars(maxTotal)
               ],
             ),
           ),

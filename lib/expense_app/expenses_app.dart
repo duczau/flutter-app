@@ -14,6 +14,8 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  double get widthScreen => MediaQuery.sizeOf(context).width;
+  double get heghtScreen => MediaQuery.sizeOf(context).height;
   final List<Expense> _registeredExpenses = [
     Expense(
       title: 'Flutter Course',
@@ -62,6 +64,29 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
+  Widget _expenseList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (ctx) => NewExpense(onAddExpense: _onAddExpense),
+            );
+          },
+          icon: const Icon(Icons.add_box_rounded),
+          color: const Color.fromARGB(255, 159, 247, 159),
+          iconSize: 36,
+        ),
+        const SizedBox(height: 8),
+        Expanded(child: ExpenseList(_registeredExpenses, _onRemoveExpense)),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -77,28 +102,28 @@ class _ExpensesState extends State<Expenses> {
           end: Alignment.bottomRight,
         ),
       ),
+
       // child:
       //  SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Chart(expenses: _registeredExpenses),
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (ctx) => NewExpense(onAddExpense: _onAddExpense),
-              );
-            },
-            icon: const Icon(Icons.add_box_rounded),
-            color: const Color.fromARGB(255, 159, 247, 159),
-            iconSize: 36,
-          ),
-          const SizedBox(height: 8),
-          Expanded(child: ExpenseList(_registeredExpenses, _onRemoveExpense)),
-        ],
-      ),
+      // child: Column(
+      //   children: [
+      //     Chart(expenses: _registeredExpenses),
+      //     Expanded(child: _expenseList()),
+      //   ],
+      // ),
+      child: widthScreen < heghtScreen
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(child: _expenseList()),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                Expanded(child: _expenseList()),
+              ],
+            ),
       // ),
     );
   }

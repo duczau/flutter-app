@@ -5,6 +5,7 @@ import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -13,9 +14,8 @@ var themeMode = ThemeMode.light;
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(
-    MainApp(),
-  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(MainApp());
 }
 
 final Map<String, WidgetBuilder> listWitget = {
@@ -25,14 +25,6 @@ final Map<String, WidgetBuilder> listWitget = {
   'Stateful Widget': (context) => StyledText('Stateful Widget'),
   'Stateless Widget': (context) => StyledText('Stateless Widget'),
 };
-
-// final Map<String, Widget> listWitget = {
-//   'Quiz': const QuizApp(),
-//   'Gradient': GradientApp(),
-//   'Counter': const StyledText('Counter'),
-//   'Stateful Widget': const StyledText('Stateful Widget'),
-//   'Stateless Widget': const StyledText('Stateless Widget'),
-// };
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -76,7 +68,7 @@ class _MainAppState extends State<MainApp> {
         textTheme: const TextTheme(
           titleLarge: TextStyle(
             fontSize: 24,
-            color: Color.fromARGB(255, 141, 21, 21),
+            color: Color.fromARGB(255, 194, 81, 81),
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
           ),
@@ -236,56 +228,93 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         title: Text(widget.title),
       ),
-      body: Container(
-        child: Center(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Main App!',
-                style: TextStyle(
-                  fontSize: 34,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto',
-                  color: Theme.of(context).textTheme.titleLarge?.color,
-                ),
+      body: Center(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Main App!',
+              style: TextStyle(
+                fontSize: 34,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto',
+                color: Theme.of(context).textTheme.titleLarge?.color,
               ),
-              Divider(
-                thickness: 10,
-                color: Colors.black54,
-                radius: BorderRadiusDirectional.circular(1),
-              ),
-              SizedBox(height: widthScreen * 0.05),
-              ...listWitget.entries.map((e) {
-                String key = e.key;
-                WidgetBuilder value = e.value;
-                return OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RootScaffold(value(context)),
-                        settings: RouteSettings(name: '/$key'),
+            ),
+            Divider(
+              thickness: 5,
+              color: Colors.lime,
+              radius: BorderRadiusDirectional.circular(1),
+            ),
+            SizedBox(height: widthScreen * 0.05),
+            Flexible(
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: listWitget.values.length,
+                itemBuilder: (context, index) {
+                  String key = listWitget.entries.elementAt(index).key;
+                  WidgetBuilder value = listWitget.entries.elementAt(index).value;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RootScaffold(value(context)),
+                              settings: RouteSettings(name: '/$key'),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 233, 230, 230),
+                          foregroundColor: const Color.fromARGB(255, 4, 46, 40),
+                          side: const BorderSide(
+                            color: Color.fromARGB(255, 175, 57, 57),
+                            width: 2,
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        icon: const Icon(Icons.park),
+                        label: Text(key),
                       ),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 233, 230, 230),
-                    foregroundColor: const Color.fromARGB(255, 4, 46, 40),
-                    side: const BorderSide(
-                      color: Color.fromARGB(255, 175, 57, 57),
-                      width: 2,
-                    ),
-                  ),
-                  icon: const Icon(Icons.park),
-                  label: Text(key),
-                );
-              }),
-              SizedBox(height: widthScreen * 0.05),
-            ],
-          ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            // ...listWitget.entries.map((e) {
+            //   String key = e.key;
+            //   WidgetBuilder value = e.value;
+            //   return OutlinedButton.icon(
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => RootScaffold(value(context)),
+            //           settings: RouteSettings(name: '/$key'),
+            //         ),
+            //       );
+            //     },
+            //     style: OutlinedButton.styleFrom(
+            //       backgroundColor: const Color.fromARGB(255, 233, 230, 230),
+            //       foregroundColor: const Color.fromARGB(255, 4, 46, 40),
+            //       side: const BorderSide(
+            //         color: Color.fromARGB(255, 175, 57, 57),
+            //         width: 2,
+            //       ),
+            //     ),
+            //     icon: const Icon(Icons.park),
+            //     label: Text(key),
+            //   );
+            // }),
+            SizedBox(height: widthScreen * 0.05),
+          ],
         ),
       ),
     );
