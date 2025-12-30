@@ -44,20 +44,22 @@ class _DraggableCardState extends State<DraggableCard>
 
   /// The alignment of the card as it is dragged or being animated.
   Offset _dragAlignment = Offset.zero;
-
   late Animation<Offset> _animation;
-
   late Offset _initialAlignment;
   bool _initialComputed = false;
 
   /// Calculates and runs a [SpringSimulation].
   void _runAnimation(Offset pixelsPerSecond, Size size) {
     _animation = _controller.drive(
-      Tween<Offset>(begin: _dragAlignment, end: _initialAlignment)..animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut, // Or a custom spring curve
-    )),
+      Tween<Offset>(begin: _dragAlignment, end: _initialAlignment)
+      // ..animate(
+      //   CurvedAnimation(
+      //     parent: _controller,
+      //     curve: Curves.elasticOut, // Or a custom spring curve
+      //   ),
+      // ),
     );
+
 
     // Calculate the velocity relative to the unit interval, [0,1],
     // used by the animation controller.
@@ -66,7 +68,7 @@ class _DraggableCardState extends State<DraggableCard>
     final unitsPerSecond = Offset(unitsPerSecondX, unitsPerSecondY);
     final unitVelocity = unitsPerSecond.distance;
 
-    const spring = SpringDescription(mass: 1, stiffness: 20, damping: 1);
+    const spring = SpringDescription(mass: 3, stiffness: 150, damping: 2);
 
     final simulation = SpringSimulation(spring, 0, 1, unitVelocity);
 
@@ -76,9 +78,12 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(seconds: 20), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(seconds: 20),
+      vsync: this,
+    );
 
- // ensure _animation is an Offset animation before any controller ticks
+    // ensure _animation is an Offset animation before any controller ticks
     // _animation = AlwaysStoppedAnimation<Offset>(_dragAlignment);
 
     _controller.addListener(() {
@@ -146,10 +151,6 @@ class _DraggableCardState extends State<DraggableCard>
               onPanUpdate: (details) {
                 setState(() {
                   _dragAlignment += details.delta;
-                  // Offset(
-                  //   details.delta.dx / (size.width / 2),
-                  //   details.delta.dy / (size.height / 2),
-                  // );
                 });
               },
               onPanEnd: (details) {
@@ -162,17 +163,4 @@ class _DraggableCardState extends State<DraggableCard>
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return AnimatedBuilder(
-  //     animation: _animation,
-  //     builder: (context, child) {
-  //       return Transform.translate(
-  //         offset: Offset(0, _animation.value * 200), // Animate vertical position
-  //         child: Card(child: widget.child),
-  //       );
-  //     },
-  //   );
-  // }
 }

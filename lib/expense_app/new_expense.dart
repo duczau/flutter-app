@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:first_app/expense_app/models/expense.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class NewExpense extends StatefulWidget {
@@ -77,93 +81,113 @@ class _NewExpenseState extends State<NewExpense> {
     super.dispose();
   }
 
+/*
+LayoutBuilder cho bạn biết: “Widget này đang được phép to/nhỏ tới mức nào?”
+Sai lầm phổ biến:
+MediaQuery.of(context).size.width → Lấy kích thước màn hình, không phải kích thước vùng widget đang nằm trong.
+*/
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Add New Expense!'),
-          TextField(
-            onChanged: _titleInputHandler,
-            decoration: InputDecoration(labelText: 'Title'),
-            maxLength: 20,
-            keyboardType: TextInputType.text,
-          ),
-          Flexible(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _costController,
-                    onEditingComplete: () =>
-                        _titleInputHandler(_costController.text),
-                    decoration: InputDecoration(
-                      labelText: 'Cost',
-                      prefixText: '\$',
-                    ),
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Add New Expense!'),
+            _showCupertinoTextField(),
+            TextField(
+              onChanged: _titleInputHandler,
+              decoration: InputDecoration(labelText: 'Title'),
+              maxLength: 20,
+              keyboardType: TextInputType.text,
+            ),
+            Flexible(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _costController,
+                      onEditingComplete: () =>
+                          _titleInputHandler(_costController.text),
+                      decoration: InputDecoration(
+                        labelText: 'Cost',
+                        prefixText: '\$',
+                      ),
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 50),
-                Row(
-                  children: [
-                    Text(
-                      _selectedDate != null
-                          ? _formatDate(_selectedDate!)
-                          : 'No Date Selected',
-                    ),
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: Icon(Icons.calendar_month),
-                    ),
-                  ],
-                ),
-              ],
+                  const SizedBox(width: 50),
+                  Row(
+                    children: [
+                      Text(
+                        _selectedDate != null
+                            ? _formatDate(_selectedDate!)
+                            : 'No Date Selected',
+                      ),
+                      IconButton(
+                        onPressed: _presentDatePicker,
+                        icon: Icon(Icons.calendar_month),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          DropdownButton(
-            value: _selectedCategory,
-            items: ExpenseCategory.values
-                .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
-                .toList(),
-            onChanged: (value) {
-              if (value == null) {
-                return;
-              }
-              setState(() {
-                _selectedCategory = value;
-              });
-            },
-          ),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    print('Submitted: ${_costController.text}');
-                    _saveExpense(context);
-                  },
-                  child: Text('Save Expense'),
-                ),
-              ],
+            SizedBox(height: 20),
+            DropdownButton(
+              value: _selectedCategory,
+              items: ExpenseCategory.values
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) {
+                  return;
+                }
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
             ),
-          ),
-        ],
+            Flexible(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      print('Submitted: ${_costController.text}');
+                      _saveExpense(context);
+                    },
+                    child: Text('Save Expense'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+  
+  Widget _showCupertinoTextField() {
+    if (kIsWeb) {
+      return Text('Web!');
+    } else if (Platform.isIOS) {
+      return Text('IOS!');
+    } else {
+      return Text('Android!');
+    }
   }
 }
