@@ -81,7 +81,7 @@ class _NewExpenseState extends State<NewExpense> {
     super.dispose();
   }
 
-/*
+  /*
 LayoutBuilder cho bạn biết: “Widget này đang được phép to/nhỏ tới mức nào?”
 Sai lầm phổ biến:
 MediaQuery.of(context).size.width → Lấy kích thước màn hình, không phải kích thước vùng widget đang nằm trong.
@@ -99,6 +99,7 @@ MediaQuery.of(context).size.width → Lấy kích thước màn hình, không ph
             Text('Add New Expense!'),
             _showCupertinoTextField(),
             TextField(
+              style: TextStyle(color: Colors.black),
               onChanged: _titleInputHandler,
               decoration: InputDecoration(labelText: 'Title'),
               maxLength: 20,
@@ -110,6 +111,7 @@ MediaQuery.of(context).size.width → Lấy kích thước màn hình, không ph
                 children: [
                   Expanded(
                     child: TextField(
+                      style: TextStyle(color: Colors.black),
                       controller: _costController,
                       onEditingComplete: () =>
                           _titleInputHandler(_costController.text),
@@ -180,7 +182,8 @@ MediaQuery.of(context).size.width → Lấy kích thước màn hình, không ph
       ),
     );
   }
-  
+
+  // check platform
   Widget _showCupertinoTextField() {
     if (kIsWeb) {
       return Text('Web!');

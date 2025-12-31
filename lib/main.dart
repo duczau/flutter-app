@@ -3,6 +3,7 @@ import 'package:first_app/basic_app/styled/styled_text.dart';
 import 'package:first_app/expense_app/expenses_app.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
+import 'package:first_app/todo_app/todo_app.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,7 @@ final Map<String, WidgetBuilder> listWitget = {
   'Quiz': (context) => QuizApp(),
   'Gradient': (context) => GradientApp(),
   'Expenses Tracker': (context) => Expenses(),
-  'Stateful Widget': (context) => StyledText('Stateful Widget'),
+  'Todo App': (context) => TodoApp(),
   'Stateless Widget': (context) => StyledText('Stateless Widget'),
 };
 
@@ -224,10 +225,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).colorScheme.surfaceTint,
+      //   title: Text(widget.title),
+      // ),
       body: Center(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
@@ -288,31 +289,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            // ...listWitget.entries.map((e) {
-            //   String key = e.key;
-            //   WidgetBuilder value = e.value;
-            //   return OutlinedButton.icon(
-            //     onPressed: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => RootScaffold(value(context)),
-            //           settings: RouteSettings(name: '/$key'),
-            //         ),
-            //       );
-            //     },
-            //     style: OutlinedButton.styleFrom(
-            //       backgroundColor: const Color.fromARGB(255, 233, 230, 230),
-            //       foregroundColor: const Color.fromARGB(255, 4, 46, 40),
-            //       side: const BorderSide(
-            //         color: Color.fromARGB(255, 175, 57, 57),
-            //         width: 2,
-            //       ),
-            //     ),
-            //     icon: const Icon(Icons.park),
-            //     label: Text(key),
-            //   );
-            // }),
             SizedBox(height: widthScreen * 0.05),
           ],
         ),
