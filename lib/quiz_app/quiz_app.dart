@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Text(
           'Welcome to the Quiz App!',
           style: TextStyle(
-            fontSize: 34,
+            fontSize: 30,
             fontStyle: FontStyle.italic,
             color: const Color.fromARGB(235, 193, 190, 194),
           ),
@@ -153,7 +153,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         const begin = Offset(1.0, 0.0);
                         const end = Offset.zero;
                         const curve = Curves.slowMiddle;
-
                         var tween = Tween(
                           begin: begin,
                           end: end,

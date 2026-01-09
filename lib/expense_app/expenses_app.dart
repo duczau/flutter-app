@@ -15,7 +15,7 @@ class Expenses extends StatefulWidget {
 
 class _ExpensesState extends State<Expenses> {
   double get widthScreen => MediaQuery.sizeOf(context).width;
-  double get heghtScreen => MediaQuery.sizeOf(context).height;
+  double get heightScreen => MediaQuery.sizeOf(context).height;
   final List<Expense> _registeredExpenses = [
     Expense(
       title: 'Flutter Course',
@@ -73,7 +73,7 @@ class _ExpensesState extends State<Expenses> {
             showModalBottomSheet(
               isScrollControlled: true,
               context: context,
-              builder: (ctx) => NewExpense(onAddExpense: _onAddExpense),
+              builder: (ctx) => SizedBox(height: heightScreen / 2, child: NewExpense(onAddExpense: _onAddExpense)),
             );
           },
           icon: const Icon(Icons.add_box_rounded),
@@ -111,7 +111,7 @@ class _ExpensesState extends State<Expenses> {
       //     Expanded(child: _expenseList()),
       //   ],
       // ),
-      child: widthScreen < heghtScreen
+      child: widthScreen < heightScreen
           ? Column(
               children: [
                 Chart(expenses: _registeredExpenses),

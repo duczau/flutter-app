@@ -89,97 +89,108 @@ MediaQuery.of(context).size.width → Lấy kích thước màn hình, không ph
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Add New Expense!'),
-            _showCupertinoTextField(),
-            TextField(
-              style: TextStyle(color: Colors.black),
-              onChanged: _titleInputHandler,
-              decoration: InputDecoration(labelText: 'Title'),
-              maxLength: 20,
-              keyboardType: TextInputType.text,
-            ),
-            Flexible(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: _costController,
-                      onEditingComplete: () =>
-                          _titleInputHandler(_costController.text),
-                      decoration: InputDecoration(
-                        labelText: 'Cost',
-                        prefixText: '\$',
-                      ),
-                      keyboardType: TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 50),
-                  Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        print('LayoutBuilder maxWidth: ${constraints.maxWidth}');
+        print('LayoutBuilder maxHeight: ${constraints.maxHeight}');
+        print('LayoutBuilder minWidth: ${constraints.minWidth}');
+        print('LayoutBuilder minHeight: ${constraints.minHeight}');
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Add New Expense!'),
+                _showCupertinoTextField(),
+                TextField(
+                  style: TextStyle(color: Colors.black),
+                  onChanged: _titleInputHandler,
+                  decoration: InputDecoration(labelText: 'Title'),
+                  maxLength: 20,
+                  keyboardType: TextInputType.text,
+                ),
+                Flexible(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        _selectedDate != null
-                            ? _formatDate(_selectedDate!)
-                            : 'No Date Selected',
+                      Expanded(
+                        child: TextField(
+                          style: TextStyle(color: Colors.black),
+                          controller: _costController,
+                          onEditingComplete: () =>
+                              _titleInputHandler(_costController.text),
+                          decoration: InputDecoration(
+                            labelText: 'Cost',
+                            prefixText: '\$',
+                          ),
+                          keyboardType: TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
                       ),
-                      IconButton(
-                        onPressed: _presentDatePicker,
-                        icon: Icon(Icons.calendar_month),
+                      const SizedBox(width: 50),
+                      Row(
+                        children: [
+                          Text(
+                            _selectedDate != null
+                                ? _formatDate(_selectedDate!)
+                                : 'No Date Selected',
+                          ),
+                          IconButton(
+                            onPressed: _presentDatePicker,
+                            icon: Icon(Icons.calendar_month),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            DropdownButton(
-              value: _selectedCategory,
-              items: ExpenseCategory.values
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
-                  .toList(),
-              onChanged: (value) {
-                if (value == null) {
-                  return;
-                }
-                setState(() {
-                  _selectedCategory = value;
-                });
-              },
-            ),
-            Flexible(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Cancel'),
+                ),
+                SizedBox(height: 20),
+                DropdownButton(
+                  value: _selectedCategory,
+                  items: ExpenseCategory.values
+                      .map(
+                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  },
+                ),
+                Flexible(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          print('Submitted: ${_costController.text}');
+                          _saveExpense(context);
+                        },
+                        child: Text('Save Expense'),
+                      ),
+                    ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      print('Submitted: ${_costController.text}');
-                      _saveExpense(context);
-                    },
-                    child: Text('Save Expense'),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

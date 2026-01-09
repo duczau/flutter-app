@@ -1,6 +1,8 @@
 import 'package:first_app/basic_app/gradient_container.dart';
 import 'package:first_app/basic_app/styled/styled_text.dart';
+import 'package:first_app/basic_app/test_animate.dart';
 import 'package:first_app/expense_app/expenses_app.dart';
+import 'package:first_app/meals_app/screens/categories.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
 import 'package:first_app/todo_app/todo_app.dart';
@@ -9,13 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 var kDarkColorTheme = const Color.fromARGB(255, 18, 18, 18);
 var themeMode = ThemeMode.light;
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  WidgetsFlutterBinding.ensureInitialized(); 
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MainApp());
 }
 
@@ -24,13 +28,17 @@ final Map<String, WidgetBuilder> listWitget = {
   'Gradient': (context) => GradientApp(),
   'Expenses Tracker': (context) => Expenses(),
   'Todo App': (context) => TodoApp(),
-  'Stateless Widget': (context) => StyledText('Stateless Widget'),
+  'Drag ball bouncing': (context) => TestAnimate(),
+};
+
+final Map<String, WidgetBuilder> listWitget2 = {
+  'Meals App': (context) => CategoriesScreen(),
 };
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
-  @override
+  @override 
   State<StatefulWidget> createState() {
     return _MainAppState();
   }
@@ -165,6 +173,9 @@ class RootScaffold extends StatelessWidget {
                           settings: const RouteSettings(name: '/main'),
                         ),
                         (route) => false,
+                        // (route) => false, // xoá tất cả
+                        // (route) => route.isFirst, // Giữ route đầu tiên
+                        // (route) => route.settings.name == '/login', // Giữ route cụ thể
                       );
                     },
                   ),
@@ -240,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontSize: 34,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto',
+                fontFamily: GoogleFonts.acme().fontFamily,
                 color: Theme.of(context).textTheme.titleLarge?.color,
               ),
             ),
@@ -289,6 +300,50 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
+            Divider(
+              thickness: 5,
+              color: const Color.fromARGB(255, 42, 78, 179),
+              radius: BorderRadiusDirectional.circular(1),
+            ),
+            SizedBox(height: widthScreen * 0.05),
+            Flexible(child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: listWitget2.values.length,
+                itemBuilder: (context, index) {
+                  String key = listWitget2.entries.elementAt(index).key;
+                  WidgetBuilder value = listWitget2.entries.elementAt(index).value;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => value(context),
+                              settings: RouteSettings(name: '/$key'),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 233, 230, 230),
+                          foregroundColor: const Color.fromARGB(255, 4, 46, 40),
+                          side: const BorderSide(
+                            color: Color.fromARGB(255, 166, 182, 97),
+                            width: 2,
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        icon: const Icon(Icons.ring_volume_rounded),
+                        label: Text(key),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              ),
             SizedBox(height: widthScreen * 0.05),
           ],
         ),
