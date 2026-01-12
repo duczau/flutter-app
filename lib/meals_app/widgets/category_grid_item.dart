@@ -16,7 +16,7 @@ class CategoryGridItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MealsScreen(title: category.title, meals: dummyMeals,),
+            builder: (context) => MealsScreen(title: category.title, meals: dummyMeals.where((meal) => meal.categories.contains(category.id)).toList()),
             settings: RouteSettings(name: '/${category.id}'),
           ),
         );

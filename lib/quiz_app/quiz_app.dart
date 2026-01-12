@@ -50,21 +50,32 @@ class _AppBackgroundQuizState extends State<AppBackgroundQuiz> {
                   backgroundColor: const Color.fromARGB(206, 95, 93, 93),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RootScaffold(Quiz()),
-                    ),
-                  );
+                  if (ModalRoute.of(context) != null && ModalRoute.of(context)!.settings.name == '/quiz_question') {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RootScaffold(Quiz()),
+                        settings: RouteSettings(name: '/quiz_question'),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RootScaffold(Quiz()),
+                        settings: RouteSettings(name: '/quiz_question'),
+                      ),
+                    );
+                  }
                 },
                 icon: AnimatedRotation(
-                            turns: turns,
-                            duration: const Duration(milliseconds: 500),
-                            child: const Icon(
-                              Icons.restart_alt,
-                              color: Color.fromARGB(255, 242, 245, 245),
-                            ),
-                          ),
+                  turns: turns,
+                  duration: const Duration(milliseconds: 500),
+                  child: const Icon(
+                    Icons.restart_alt,
+                    color: Color.fromARGB(255, 242, 245, 245),
+                  ),
+                ),
 
                 onHover: (value) => {
                   setState(() {
@@ -83,7 +94,7 @@ class _AppBackgroundQuizState extends State<AppBackgroundQuiz> {
                     //         Icons.restart_alt,
                     //         color: Color.fromARGB(255, 242, 245, 245),
                     //       );
-                  })
+                  }),
                 },
 
                 label: Text(
@@ -163,6 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: child,
                         );
                       },
+                  settings: RouteSettings(name: '/quiz_question'),
                 ),
               );
             },
