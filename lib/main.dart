@@ -3,6 +3,7 @@ import 'package:first_app/basic_app/styled/styled_text.dart';
 import 'package:first_app/basic_app/test_animate.dart';
 import 'package:first_app/expense_app/expenses_app.dart';
 import 'package:first_app/meals_app/screens/categories.dart';
+import 'package:first_app/meals_app/screens/tabs.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
 import 'package:first_app/todo_app/todo_app.dart';
@@ -32,7 +33,7 @@ final Map<String, WidgetBuilder> listWitget = {
 };
 
 final Map<String, WidgetBuilder> listWitget2 = {
-  'Meals App': (context) => CategoriesScreen(),
+  'Meals App': (context) => TabScreen(),
 };
 
 class MainApp extends StatefulWidget {

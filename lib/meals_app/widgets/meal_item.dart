@@ -1,19 +1,27 @@
 import 'package:first_app/meals_app/models/meal.dart';
+import 'package:first_app/meals_app/screens/meal_details.dart';
 import 'package:first_app/meals_app/widgets/meal_item_trait.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class MealItem extends StatelessWidget{
-  const MealItem({super.key, required this.meal});
+class MealItem extends StatelessWidget {
+  const MealItem({
+    super.key,
+    required this.meal,
+    required this.toggleFavorite,
+  });
 
   final Meal meal;
+  final void Function(Meal meal) toggleFavorite;
 
   String get complexityText {
-    return meal.complexity.name[0].toUpperCase() + meal.complexity.name.substring(1);
+    return meal.complexity.name[0].toUpperCase() +
+        meal.complexity.name.substring(1);
   }
-  
+
   String get affordabilityText {
-    return meal.affordability.name[0].toUpperCase() + meal.affordability.name.substring(1);
+    return meal.affordability.name[0].toUpperCase() +
+        meal.affordability.name.substring(1);
   }
 
   @override
@@ -21,7 +29,12 @@ class MealItem extends StatelessWidget{
     return Card(
       child: InkWell(
         onTap: () {
-          // Handle tap
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MealDetailScreen(meal: meal, toggleFavorite: toggleFavorite),
+            ),
+          );
         },
         child: Stack(
           children: [
@@ -49,19 +62,22 @@ class MealItem extends StatelessWidget{
                       meal.title,
                       maxLines: 2,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        MealItemTrait(icon: Icons.access_time, text: '${meal.duration.toString()} min'),
+                        MealItemTrait(
+                          icon: Icons.access_time,
+                          text: '${meal.duration.toString()} min',
+                        ),
                         MealItemTrait(icon: Icons.work, text: complexityText),
-                        MealItemTrait(icon: Icons.attach_money, text: affordabilityText),
+                        MealItemTrait(
+                          icon: Icons.attach_money,
+                          text: affordabilityText,
+                        ),
                       ],
                     ),
                   ],

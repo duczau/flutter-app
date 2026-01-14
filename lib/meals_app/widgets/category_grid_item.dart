@@ -1,12 +1,18 @@
 import 'package:first_app/meals_app/data/dummy_data.dart';
 import 'package:first_app/meals_app/models/category.dart';
+import 'package:first_app/meals_app/models/meal.dart';
 import 'package:first_app/meals_app/screens/meals.dart';
 import 'package:flutter/material.dart';
 
 class CategoryGridItem extends StatelessWidget {
   final Category category;
+  final void Function(Meal meal) toggleFavorite;
 
-  const CategoryGridItem({super.key, required this.category});
+  const CategoryGridItem({
+    super.key,
+    required this.category,
+    required this.toggleFavorite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,13 @@ class CategoryGridItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MealsScreen(title: category.title, meals: dummyMeals.where((meal) => meal.categories.contains(category.id)).toList()),
+            builder: (context) => MealsScreen(
+              title: category.title,
+              meals: dummyMeals
+                  .where((meal) => meal.categories.contains(category.id))
+                  .toList(),
+              toggleFavorite: toggleFavorite,
+            ),
             settings: RouteSettings(name: '/${category.id}'),
           ),
         );
