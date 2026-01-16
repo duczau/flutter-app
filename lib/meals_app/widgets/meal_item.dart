@@ -80,6 +80,27 @@ class MealItem extends StatelessWidget {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        MealItemTrait(
+                          icon: Icons.girl_outlined,
+                          text: meal.isGlutenFree ? "Gluten Free" : "Contains Gluten",
+                        ),
+                        MealItemTrait(
+                          icon: Icons.girl_rounded,
+                          text: meal.isLactoseFree ? "Lactose Free" : "Contains Lactose",
+                        ),
+                        MealItemTrait(
+                          icon: Icons.girl_outlined,
+                          text: meal.isVegan ? "Vegan" : "Not is Vegan",
+                        ),
+                        MealItemTrait(
+                          icon: Icons.girl_outlined,
+                          text: meal.isVegetarian ? "For Vegetarian" : "Not for Vegetarian",
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

@@ -7,15 +7,21 @@ import 'package:flutter/material.dart';
 class CategoryGridItem extends StatelessWidget {
   final Category category;
   final void Function(Meal meal) toggleFavorite;
+  final List<Meal> availableMeals;
 
   const CategoryGridItem({
     super.key,
     required this.category,
     required this.toggleFavorite,
+    required this.availableMeals,
   });
 
   @override
   Widget build(BuildContext context) {
+    var categoryLength = availableMeals
+        .where((meal) => meal.categories.contains(category.id))
+        .toList()
+        .length;
     return InkWell(
       splashColor: Colors.lightGreen,
       onTap: () {
@@ -24,7 +30,7 @@ class CategoryGridItem extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => MealsScreen(
               title: category.title,
-              meals: dummyMeals
+              meals: availableMeals
                   .where((meal) => meal.categories.contains(category.id))
                   .toList(),
               toggleFavorite: toggleFavorite,
@@ -44,7 +50,7 @@ class CategoryGridItem extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            category.title,
+            "${category.title} - ${categoryLength} meals",
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ),

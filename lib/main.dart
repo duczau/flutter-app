@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 var kDarkColorTheme = const Color.fromARGB(255, 18, 18, 18);
@@ -19,9 +20,9 @@ var themeMode = ThemeMode.light;
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MainApp());
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 final Map<String, WidgetBuilder> listWitget = {
@@ -39,7 +40,7 @@ final Map<String, WidgetBuilder> listWitget2 = {
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
-  @override 
+  @override
   State<StatefulWidget> createState() {
     return _MainAppState();
   }
@@ -64,6 +65,11 @@ class _MainAppState extends State<MainApp> {
       scrollBehavior: MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
       ),
+      routes: {
+        for (MapEntry<String, Widget Function(BuildContext)> z
+            in listWitget.entries)
+          "/${z.key}": z.value,
+      },
       title: 'Main App',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromARGB(255, 37, 106, 146),
@@ -269,7 +275,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: listWitget.values.length,
                 itemBuilder: (context, index) {
                   String key = listWitget.entries.elementAt(index).key;
-                  WidgetBuilder value = listWitget.entries.elementAt(index).value;
+                  WidgetBuilder value = listWitget.entries
+                      .elementAt(index)
+                      .value;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -279,19 +287,28 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RootScaffold(value(context)),
+                              builder: (context) =>
+                                  RootScaffold(value(context)),
                               settings: RouteSettings(name: '/$key'),
                             ),
                           );
                         },
                         style: OutlinedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 233, 230, 230),
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            233,
+                            230,
+                            230,
+                          ),
                           foregroundColor: const Color.fromARGB(255, 4, 46, 40),
                           side: const BorderSide(
                             color: Color.fromARGB(255, 175, 57, 57),
                             width: 2,
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                         ),
                         icon: const Icon(Icons.park),
                         label: Text(key),
@@ -307,13 +324,16 @@ class _MyHomePageState extends State<MyHomePage> {
               radius: BorderRadiusDirectional.circular(1),
             ),
             SizedBox(height: widthScreen * 0.05),
-            Flexible(child: ListView.builder(
+            Flexible(
+              child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: listWitget2.values.length,
                 itemBuilder: (context, index) {
                   String key = listWitget2.entries.elementAt(index).key;
-                  WidgetBuilder value = listWitget2.entries.elementAt(index).value;
+                  WidgetBuilder value = listWitget2.entries
+                      .elementAt(index)
+                      .value;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -329,13 +349,21 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
                         },
                         style: OutlinedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 233, 230, 230),
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            233,
+                            230,
+                            230,
+                          ),
                           foregroundColor: const Color.fromARGB(255, 4, 46, 40),
                           side: const BorderSide(
                             color: Color.fromARGB(255, 166, 182, 97),
                             width: 2,
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                         ),
                         icon: const Icon(Icons.ring_volume_rounded),
                         label: Text(key),
@@ -344,7 +372,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
               ),
-              ),
+            ),
             SizedBox(height: widthScreen * 0.05),
           ],
         ),

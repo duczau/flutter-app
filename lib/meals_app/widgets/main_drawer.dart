@@ -1,17 +1,17 @@
+import 'package:first_app/meals_app/widgets/filter_switcher.dart';
 import 'package:flutter/material.dart';
 
-class MainDrawer extends StatefulWidget {
-  const MainDrawer({super.key, required this.selectTab});
+class MainDrawer extends StatelessWidget {
+  const MainDrawer({
+    super.key,
+    required this.selectTab,
+    required this.mapFilter,
+    required this.onFilterChanged,
+  });
+
   final void Function(int index) selectTab;
-
-  @override
-  State<StatefulWidget> createState() {
-    return _MainDrawer();
-  }
-}
-
-class _MainDrawer extends State<MainDrawer> {
-  bool isfilter = false;
+  final Map<String, bool> mapFilter;
+  final void Function(Map<String, bool>) onFilterChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _MainDrawer extends State<MainDrawer> {
             trailing: Icon(Icons.cookie_rounded),
             onTap: () {
               Navigator.pop(context);
-              widget.selectTab(0);
+              selectTab(0);
             },
           ),
           ListTile(
@@ -54,15 +54,34 @@ class _MainDrawer extends State<MainDrawer> {
             trailing: Icon(Icons.favorite_rounded),
             onTap: () {
               Navigator.pop(context);
-              widget.selectTab(1);
+              selectTab(1);
             },
           ),
-          SwitchListTile(title: Text('filter'), activeThumbColor: Colors.amberAccent, value: isfilter, onChanged: (isCheck) {
-            print(isCheck);
-            setState(() {
-              isfilter = isCheck;
-            });
-          })
+          ListTile(
+            leading: Icon(Icons.abc_sharp),
+            title: Text('Filter'),
+            subtitle: Text('Go to Filter screen'),
+            trailing: Icon(Icons.favorite_rounded),
+            onTap: () async {
+              Navigator.pop(context);
+              final a = await Navigator.push<Map<String, bool>>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FilterSwitches(
+                    mapFilter: mapFilter,
+                    onFilterChanged: onFilterChanged,
+                  ),
+                ),
+              );
+              // .then((onValue) {
+              //   onFilterChanged(onValue!); // cach 1
+              // });
+
+              if (a != null) {
+                onFilterChanged(a); // cach 2
+              }
+            },
+          ),
         ],
       ),
     );
