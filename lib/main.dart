@@ -72,7 +72,7 @@ class _MainAppState extends State<MainApp> {
       },
       title: 'Main App',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 37, 106, 146),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 95, 142, 170),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color.fromARGB(255, 13, 134, 74),
         ),

@@ -48,14 +48,14 @@ class _DraggableCardState extends State<DraggableCard>
   late Offset _initialAlignment;
   bool _initialComputed = false;
   
-  Offset _velocity = Offset.zero;
-  double gravity = 980;
-  double friction = 0.7;
-  double baseTime = 0.016;
-  double cardWidth = 100;   // ✅ Thêm card dimensions
-  double cardHeight = 100;
-  bool _isDragging = false;
-  bool _isAnimating = false;
+  // Offset _velocity = Offset.zero;
+  // double gravity = 980;
+  // double friction = 0.7;
+  // double baseTime = 0.016;
+  // double cardWidth = 100;   // ✅ Thêm card dimensions
+  // double cardHeight = 100;
+  // bool _isDragging = false;
+  // bool _isAnimating = false;
 
   /// Calculates and runs a [SpringSimulation].
   void _runAnimation(Offset pixelsPerSecond, Size size) {
@@ -78,71 +78,71 @@ class _DraggableCardState extends State<DraggableCard>
     _controller.animateWith(simulation);
   }
 
-  void _onAnimationTick() {
-    if (!_isDragging && _isAnimating) {
-      if (!mounted) return;
-      setState(() {
-        final size = MediaQuery.of(context).size;
+  // void _onAnimationTick() {
+  //   if (!_isDragging && _isAnimating) {
+  //     if (!mounted) return;
+  //     setState(() {
+  //       final size = MediaQuery.of(context).size;
         
-        // Apply gravity
-        _velocity = Offset(
-          _velocity.dx,
-          _velocity.dy + gravity * baseTime,
-        );
+  //       // Apply gravity
+  //       _velocity = Offset(
+  //         _velocity.dx,
+  //         _velocity.dy + gravity * baseTime,
+  //       );
         
-        // Update position
-        _dragAlignment = Offset(
-          _dragAlignment.dx + _velocity.dx * baseTime,
-          _dragAlignment.dy + _velocity.dy * baseTime,
-        );
+  //       // Update position
+  //       _dragAlignment = Offset(
+  //         _dragAlignment.dx + _velocity.dx * baseTime,
+  //         _dragAlignment.dy + _velocity.dy * baseTime,
+  //       );
         
-        // ✅ Bounce off bottom
-        if (_dragAlignment.dy + cardHeight >= size.height) {
-          _dragAlignment = Offset(_dragAlignment.dx, size.height - cardHeight);
-          _velocity = Offset(_velocity.dx, -_velocity.dy * friction);
+  //       // ✅ Bounce off bottom
+  //       if (_dragAlignment.dy + cardHeight >= size.height) {
+  //         _dragAlignment = Offset(_dragAlignment.dx, size.height - cardHeight);
+  //         _velocity = Offset(_velocity.dx, -_velocity.dy * friction);
           
-          print('Bottom bounce - velocity: ${_velocity.dy}');
+  //         print('Bottom bounce - velocity: ${_velocity.dy}');
           
-          if (_velocity.dy.abs() < 10) {
-            _velocity = Offset(_velocity.dx, 0);
-          }
-        }
+  //         if (_velocity.dy.abs() < 10) {
+  //           _velocity = Offset(_velocity.dx, 0);
+  //         }
+  //       }
         
-        // ✅ Bounce off top
-        if (_dragAlignment.dy <= 0) {
-          _dragAlignment = Offset(_dragAlignment.dx, 0);
-          _velocity = Offset(_velocity.dx, -_velocity.dy * friction);
-        }
+  //       // ✅ Bounce off top
+  //       if (_dragAlignment.dy <= 0) {
+  //         _dragAlignment = Offset(_dragAlignment.dx, 0);
+  //         _velocity = Offset(_velocity.dx, -_velocity.dy * friction);
+  //       }
         
-        // ✅ Bounce off right
-        if (_dragAlignment.dx + cardWidth >= size.width) {
-          _dragAlignment = Offset(size.width - cardWidth, _dragAlignment.dy);
-          _velocity = Offset(-_velocity.dx * friction, _velocity.dy);
+  //       // ✅ Bounce off right
+  //       if (_dragAlignment.dx + cardWidth >= size.width) {
+  //         _dragAlignment = Offset(size.width - cardWidth, _dragAlignment.dy);
+  //         _velocity = Offset(-_velocity.dx * friction, _velocity.dy);
           
-          if (_velocity.dx.abs() < 10) {
-            _velocity = Offset(0, _velocity.dy);
-          }
-        }
+  //         if (_velocity.dx.abs() < 10) {
+  //           _velocity = Offset(0, _velocity.dy);
+  //         }
+  //       }
         
-        // ✅ Bounce off left
-        if (_dragAlignment.dx <= 0) {
-          _dragAlignment = Offset(0, _dragAlignment.dy);
-          _velocity = Offset(-_velocity.dx * friction, _velocity.dy);
-        }
+  //       // ✅ Bounce off left
+  //       if (_dragAlignment.dx <= 0) {
+  //         _dragAlignment = Offset(0, _dragAlignment.dy);
+  //         _velocity = Offset(-_velocity.dx * friction, _velocity.dy);
+  //       }
         
-        // ✅ Stop if at rest
-        final isAtBottom = (_dragAlignment.dy + cardHeight >= size.height - 1);
-        final isAtRest = (_velocity.dx.abs() < 1 && _velocity.dy.abs() < 1);
+  //       // ✅ Stop if at rest
+  //       final isAtBottom = (_dragAlignment.dy + cardHeight >= size.height - 1);
+  //       final isAtRest = (_velocity.dx.abs() < 1 && _velocity.dy.abs() < 1);
         
-        if (isAtRest && isAtBottom) {
-          _velocity = Offset.zero;
-          _isAnimating = false;
-          _controller.stop();
-          print('Animation stopped - at rest');
-        }
-      });
-    }
-  }
+  //       if (isAtRest && isAtBottom) {
+  //         _velocity = Offset.zero;
+  //         _isAnimating = false;
+  //         _controller.stop();
+  //         print('Animation stopped - at rest');
+  //       }
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
@@ -150,21 +150,22 @@ class _DraggableCardState extends State<DraggableCard>
     _controller = AnimationController(
       duration: const Duration(seconds: 20),
       vsync: this,
-    )..addListener(_onAnimationTick);
+    );
+    // ..addListener(_onAnimationTick);
 
     // ensure _animation is an Offset animation before any controller ticks
     // _animation = AlwaysStoppedAnimation<Offset>(_dragAlignment);
 
-    // _controller.addListener(() {
-    //   setState(() {
-    //     _dragAlignment = _animation.value;
-    //   });
-    //   // ✅ Kiểm tra nếu animation hoàn thành (về vị trí ban đầu)
-    //   if (_controller.isCompleted) {
-    //     // Reset controller để có thể chạy animation lại lần tiếp theo
-    //     _controller.reset();
-    //   }
-    // });
+    _controller.addListener(() {
+      setState(() {
+        _dragAlignment = _animation.value;
+      });
+      // ✅ Kiểm tra nếu animation hoàn thành (về vị trí ban đầu)
+      if (_controller.isCompleted) {
+        // Reset controller để có thể chạy animation lại lần tiếp theo
+        _controller.reset();
+      }
+    });
   }
 
   @override
@@ -205,22 +206,22 @@ class _DraggableCardState extends State<DraggableCard>
 
   @override
   void dispose() {
-    _controller.removeListener(_onAnimationTick); // ✅ Remove listener
-    _controller.stop();
+    // _controller.removeListener(_onAnimationTick); // ✅ Remove listener
+    // _controller.stop();
     _controller.dispose();
     super.dispose();
   }
 
-  void _startAnimation(Offset pixelsPerSecond) {
-    print('Starting animation - initial velocity: $pixelsPerSecond');
+  // void _startAnimation(Offset pixelsPerSecond) {
+  //   print('Starting animation - initial velocity: $pixelsPerSecond');
     
-    _velocity = Offset(
-      pixelsPerSecond.dx / 60,
-      pixelsPerSecond.dy / 60,
-    );
-    _isAnimating = true;
-    _controller.repeat();
-  }
+  //   _velocity = Offset(
+  //     pixelsPerSecond.dx / 60,
+  //     pixelsPerSecond.dy / 60,
+  //   );
+  //   _isAnimating = true;
+  //   _controller.repeat();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -233,27 +234,27 @@ class _DraggableCardState extends State<DraggableCard>
             top: _dragAlignment.dy,
             child: GestureDetector(
               onPanDown: (details) {
-                  _isDragging = true;
-                  _isAnimating = false;
-                  _velocity = Offset.zero;
+                  // _isDragging = true;
+                  // _isAnimating = false;
+                  // _velocity = Offset.zero;
                 _controller.stop();
               },
               onPanUpdate: (details) {
                 setState(() {
                   _dragAlignment += details.delta;
                   // Clamp to bounds
-                  _dragAlignment = Offset(
-                    _dragAlignment.dx.clamp(0, size.width - cardWidth),
-                    _dragAlignment.dy.clamp(0, size.height - cardHeight),
-                  );
+                  // _dragAlignment = Offset(
+                  //   _dragAlignment.dx.clamp(0, size.width - cardWidth),
+                  //   _dragAlignment.dy.clamp(0, size.height - cardHeight),
+                  // );
                 });
               },
               onPanEnd: (details) {
-                setState(() {
-                  _isDragging = false;
-                });
-                _startAnimation(details.velocity.pixelsPerSecond);
-                // _runAnimation(details.velocity.pixelsPerSecond, size);
+                // setState(() {
+                //   _isDragging = false;
+                // });
+                // _startAnimation(details.velocity.pixelsPerSecond);
+                _runAnimation(details.velocity.pixelsPerSecond, size);
               },
               child: Card(child: widget.child),
             ),

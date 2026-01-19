@@ -12,7 +12,7 @@ class MealsScreen extends StatelessWidget {
 
   final String title;
   final List<Meal> meals;
-  final void Function(Meal meal) toggleFavorite;
+  final void Function(Meal meal) toggleFavorite; // change to provider
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +29,7 @@ class MealsScreen extends StatelessWidget {
     if (meals.isEmpty) {
       content = Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text('Uh oh ... No meals found!'),
             SizedBox(height: 16),

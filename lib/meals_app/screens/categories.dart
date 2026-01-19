@@ -11,10 +11,11 @@ class CategoriesScreen extends StatelessWidget {
     required this.availableMeals,
   });
   final List<Meal> availableMeals;
-  final void Function(Meal meal) toggleFavorite;
+  final void Function(Meal meal) toggleFavorite; // change to provider
 
   @override
   Widget build(BuildContext context) {
+    double sizeText = MediaQuery.of(context).size.width * 0.03;
     return GridView.builder(
       padding: const EdgeInsets.all(15),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -50,18 +51,21 @@ class CategoriesScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "data - ",
-                                style: Theme.of(
-                                  newContext,
-                                ).textTheme.titleSmall,
+                                style: TextStyle(
+                                  fontSize: sizeText,
+                                  color: Theme.of(
+                                    newContext,
+                                  ).textTheme.titleSmall?.color,
+                                ),
                               ),
                               Text(
                                 'Category $index',
-                                style: Theme.of(newContext)
-                                    .textTheme
-                                    .titleSmall!
-                                    .merge(
-                                      // kết hợp và ghi  đè những thuộc tính đã có
-                                      TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  fontSize: sizeText,
+                                  color: Theme.of(newContext).textTheme.titleSmall?.color,
+                                ).merge(
+                                  // kết hợp và ghi  đè những thuộc tính đã có
+                                  TextStyle(color: Colors.white),
                                     ), // copywith tao 1 ban sao cho titleSmall o main.dart
                               ),
                             ],

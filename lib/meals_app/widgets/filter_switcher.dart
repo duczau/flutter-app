@@ -1,6 +1,8 @@
+import 'package:first_app/meals_app/provider/meals_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FilterSwitches extends StatefulWidget {
+class FilterSwitches extends ConsumerStatefulWidget {
   const FilterSwitches({
     super.key,
     required this.mapFilter,
@@ -10,12 +12,13 @@ class FilterSwitches extends StatefulWidget {
   final void Function(Map<String, bool>) onFilterChanged;
 
   @override
-  State<FilterSwitches> createState() => _FilterSwitchesState();
+  ConsumerState<FilterSwitches> createState() => _FilterSwitchesState();
 }
 
-class _FilterSwitchesState extends State<FilterSwitches> {
+class _FilterSwitchesState extends ConsumerState<FilterSwitches> {
   @override
   Widget build(BuildContext context) {
+    final activeFilters = ref.read(filteredMealsProvider);
     return Scaffold(
       appBar: AppBar(title: Text("Filter screen")),
       body: PopScope(
@@ -44,21 +47,22 @@ class _FilterSwitchesState extends State<FilterSwitches> {
           );
 
           if (shouldExit == true && context.mounted) {
-            Navigator.pop(context, widget.mapFilter);
+            ref.read(filteredMealsProvider.notifier).setFilters(activeFilters);
+            Navigator.pop(context, null);
           }
         },
         child: Column(
           children: [
-            for (String filter in widget.mapFilter.keys)
+            for (String filter in activeFilters.keys)
               SwitchListTile(
                 title: Text(filter),
                 activeThumbColor: const Color.fromARGB(255, 85, 68, 5),
-                value: widget.mapFilter[filter]!,
+                value: activeFilters[filter]!,
                 onChanged: (isCheck) {
                   setState(() {
-                    widget.mapFilter[filter] = isCheck;
+                    activeFilters[filter] = isCheck;
                   });
-                  widget.onFilterChanged(widget.mapFilter);
+                  // widget.onFilterChanged(widget.mapFilter);
                 },
               ),
           ],

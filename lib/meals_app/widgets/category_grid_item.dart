@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class CategoryGridItem extends StatelessWidget {
   final Category category;
-  final void Function(Meal meal) toggleFavorite;
+  final void Function(Meal meal) toggleFavorite; // change to provider
   final List<Meal> availableMeals;
 
   const CategoryGridItem({

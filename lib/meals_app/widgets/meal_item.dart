@@ -12,7 +12,7 @@ class MealItem extends StatelessWidget {
   });
 
   final Meal meal;
-  final void Function(Meal meal) toggleFavorite;
+  final void Function(Meal meal) toggleFavorite; // change to provider
 
   String get complexityText {
     return meal.complexity.name[0].toUpperCase() +
@@ -81,7 +81,7 @@ class MealItem extends StatelessWidget {
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         MealItemTrait(
                           icon: Icons.girl_outlined,
@@ -91,6 +91,11 @@ class MealItem extends StatelessWidget {
                           icon: Icons.girl_rounded,
                           text: meal.isLactoseFree ? "Lactose Free" : "Contains Lactose",
                         ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
                         MealItemTrait(
                           icon: Icons.girl_outlined,
                           text: meal.isVegan ? "Vegan" : "Not is Vegan",

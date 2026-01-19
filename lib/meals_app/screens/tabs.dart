@@ -21,12 +21,12 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   String activeTabTitle = '';
   late Widget activeScreen;
 
-  Map<String, bool> mapFilter = {
-    "Gluten": false,
-    "Vegan": false,
-    "Vegetarian": false,
-    "Lactose": false,
-  };
+  // Map<String, bool> mapFilter = {
+  //   "Gluten": false,
+  //   "Vegan": false,
+  //   "Vegetarian": false,
+  //   "Lactose": false,
+  // };
 
   @override
   void initState() {
@@ -41,19 +41,19 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     );
   }
 
-  void _toggleFavoriteMeal(Meal meal) {
-    final isExisting = favoriteMeals.contains(meal);
-    if (isExisting) {
-      setState(() {
-        favoriteMeals.remove(meal);
-      });
-      _showInfoMessage("remove meal");
-    } else {
-      setState(() {
-        favoriteMeals.add(meal);
-      });
-      _showInfoMessage("add meal");
-    }
+  void _toggleFavoriteMeal(Meal meal) { // change to provider
+    // final isExisting = favoriteMeals.contains(meal);
+    // if (isExisting) {
+    //   setState(() {
+    //     favoriteMeals.remove(meal);
+    //   });
+    //   _showInfoMessage("remove meal");
+    // } else {
+    //   setState(() {
+    //     favoriteMeals.add(meal);
+    //   });
+    //   _showInfoMessage("add meal");
+    // }
   }
 
   void _selectTab(int value) {
@@ -63,15 +63,15 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   }
 
   void _onFilterChanged(Map<String, bool> updatedFilter) {
-    setState(() {
-      mapFilter = updatedFilter;
-      _filterMeals();
-    });
-    print('Filter updated: $mapFilter');
+    // setState(() {
+    //   mapFilter = updatedFilter;
+    //   _filterMeals();
+    // });
+    print('Filter updated: $updatedFilter');
   }
 
   // ✅ Hàm lọc meals theo filter
-  void _filterMeals() {
+  void _filterMeals(Map<String, bool> mapFilter) {
     // Ví dụ: nếu Gluten = true, chỉ show meals không có gluten
     final filtered = dummyMeals.where((meal) {
       if (mapFilter["Gluten"] == true && !meal.isGlutenFree) {
@@ -88,21 +88,47 @@ class _TabScreenState extends ConsumerState<TabScreen> {
       }
       return true;
     }).toList();
-    favoriteMeals = filtered;
+    // favoriteMeals = filtered;
+
+    // Set giá trị
+    ref.read(favouriteMealsProvider.notifier).state = filtered;
+        // ref.read(favouriteMealsProvider.notifier).state.where((meal) => filtered.contains(meal)).toList();
     availableMeals = filtered;
   }
 
   @override
   Widget build(BuildContext context) {
-    final mea = ref.watch(mealsProvider);
+    print("Rebuild TabScreen");
+    // _filterMeals(); // Cập nhật meals khi build
+    // Đọc giá trị
+    final meals = ref.watch(mealsProvider);
+    final favMeals = ref.watch(favouriteMealsProvider);
+    final mapFilter = ref.watch(filteredMealsProvider);
+    final filtered = dummyMeals.where((meal) {
+      if (mapFilter["Gluten"] == true && !meal.isGlutenFree) {
+        return false;
+      }
+      if (mapFilter["Vegan"] == true && !meal.isVegan) {
+        return false;
+      }
+      if (mapFilter["Vegetarian"] == true && !meal.isVegetarian) {
+        return false;
+      }
+      if (mapFilter["Lactose"] == true && !meal.isLactoseFree) {
+        return false;
+      }
+      return true;
+    }).toList();
+
     if (_selectedTabIndex == 0) {
       activeTabTitle = 'Pick your category';
-      activeScreen = CategoriesScreen(availableMeals: availableMeals, toggleFavorite: _toggleFavoriteMeal);
+      activeScreen = CategoriesScreen(availableMeals: filtered, toggleFavorite: _toggleFavoriteMeal);
     } else {
       activeTabTitle = 'Your Favorites';
       activeScreen = MealsScreen(
         title: 'zzzz',
-        meals: favoriteMeals,
+        // meals: favoriteMeals,
+        meals: filtered,
         toggleFavorite: _toggleFavoriteMeal,
       );
     }
@@ -111,7 +137,7 @@ class _TabScreenState extends ConsumerState<TabScreen> {
       appBar: AppBar(title: Text(activeTabTitle)),
       drawer: MainDrawer(
         selectTab: _selectTab,
-        mapFilter: mapFilter,
+        mapFilter: {},
         onFilterChanged: _onFilterChanged,
       ),
       body: activeScreen,
