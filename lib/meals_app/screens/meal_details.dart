@@ -50,7 +50,7 @@ class MealDetailScreen extends ConsumerWidget {
                   );
                 }
               },
-              icon: Icon(Icons.favorite),
+              icon: Icon(isFavorite ? Icons.favorite : Icons.star),
               isSelected: isFavorite,
               selectedIcon: Icon(Icons.favorite, color: Colors.red),
             ),
@@ -62,7 +62,7 @@ class MealDetailScreen extends ConsumerWidget {
         children: [
           Image.network(meal.imageUrl, fit: BoxFit.cover),
           Text(
-            'Ingredients - ' + count.toString(),
+            'Ingredients - $count',
             textAlign: TextAlign.center,
             style: Theme.of(
               context,

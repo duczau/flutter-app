@@ -57,3 +57,23 @@ final filteredMealsProvider =
     NotifierProvider<FilteredMealsNotifier, Map<String, bool>>(() {
       return FilteredMealsNotifier();
     });
+
+final filteredMealsListProvider = Provider<List<Meal>>((ref) {
+  final meals = ref.watch(mealsProvider);
+  final mapFilter = ref.watch(filteredMealsProvider);
+  return meals.where((meal) {
+    if (mapFilter["Gluten"] == true && !meal.isGlutenFree) {
+      return false;
+    }
+    if (mapFilter["Vegan"] == true && !meal.isVegan) {
+      return false;
+    }
+    if (mapFilter["Vegetarian"] == true && !meal.isVegetarian) {
+      return false;
+    }
+    if (mapFilter["Lactose"] == true && !meal.isLactoseFree) {
+      return false;
+    }
+    return true;
+  }).toList();
+});

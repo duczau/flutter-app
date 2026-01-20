@@ -44,5 +44,6 @@ samples, guidance on mobile development, and a full API reference.
         - Gridview, Inkwell, Tab-based Navigation 
         - Route screen (scaffold to show back button - software back, back button of app, or PopScope for hard back - back button of OS, device), named screen with route name in main.dart 
         - Stack widget, lifting state up
-        - Provider, StateNofifier(Nofifier in newer version), StateNotifierProvider(NotifierProvider in newer version), state management with Riverpod,
+        - Provider, StateNofifier(Nofifier in newer version), StateNotifierProvider(NotifierProvider in newer version), state management with Riverpod, combine Providers
         - In provider, when need to change state, don't use add(), revome(), instead use [...state, newElement]  or state.where(...filter with != element).toList()
+        - Explicit (you control entire animation) and Implicit(flutter controls animation) animation

@@ -91,8 +91,8 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     // favoriteMeals = filtered;
 
     // Set giá trị
-    ref.read(favouriteMealsProvider.notifier).state = filtered;
-        // ref.read(favouriteMealsProvider.notifier).state.where((meal) => filtered.contains(meal)).toList();
+    // ref.read(favouriteMealsProvider.notifier).state = filtered;
+    // ref.read(favouriteMealsProvider.notifier).state.where((meal) => filtered.contains(meal)).toList();
     availableMeals = filtered;
   }
 
@@ -101,24 +101,26 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     print("Rebuild TabScreen");
     // _filterMeals(); // Cập nhật meals khi build
     // Đọc giá trị
-    final meals = ref.watch(mealsProvider);
+    // final meals = ref.watch(mealsProvider);
     final favMeals = ref.watch(favouriteMealsProvider);
-    final mapFilter = ref.watch(filteredMealsProvider);
-    final filtered = dummyMeals.where((meal) {
-      if (mapFilter["Gluten"] == true && !meal.isGlutenFree) {
-        return false;
-      }
-      if (mapFilter["Vegan"] == true && !meal.isVegan) {
-        return false;
-      }
-      if (mapFilter["Vegetarian"] == true && !meal.isVegetarian) {
-        return false;
-      }
-      if (mapFilter["Lactose"] == true && !meal.isLactoseFree) {
-        return false;
-      }
-      return true;
-    }).toList();
+    // final mapFilter = ref.watch(filteredMealsProvider);
+    // final filtered = dummyMeals.where((meal) {
+    //   if (mapFilter["Gluten"] == true && !meal.isGlutenFree) {
+    //     return false;
+    //   }
+    //   if (mapFilter["Vegan"] == true && !meal.isVegan) {
+    //     return false;
+    //   }
+    //   if (mapFilter["Vegetarian"] == true && !meal.isVegetarian) {
+    //     return false;
+    //   }
+    //   if (mapFilter["Lactose"] == true && !meal.isLactoseFree) {
+    //     return false;
+    //   }
+    //   return true;
+    // }).toList();
+
+    final filtered = ref.watch(filteredMealsListProvider);
 
     if (_selectedTabIndex == 0) {
       activeTabTitle = 'Pick your category';
@@ -128,7 +130,7 @@ class _TabScreenState extends ConsumerState<TabScreen> {
       activeScreen = MealsScreen(
         title: 'zzzz',
         // meals: favoriteMeals,
-        meals: filtered,
+        meals: favMeals,
         toggleFavorite: _toggleFavoriteMeal,
       );
     }
