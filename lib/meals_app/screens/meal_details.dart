@@ -50,9 +50,18 @@ class MealDetailScreen extends ConsumerWidget {
                   );
                 }
               },
-              icon: Icon(isFavorite ? Icons.favorite : Icons.star),
-              isSelected: isFavorite,
-              selectedIcon: Icon(Icons.favorite, color: Colors.red),
+              // implicit animation
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (child, animation) =>
+                    RotationTransition(turns: animation, child: child),
+                child: Icon(
+                  isFavorite ? Icons.favorite : Icons.star,
+                  key: ValueKey(isFavorite),
+                ),
+              ),
+              // isSelected: isFavorite,
+              // selectedIcon: Icon(Icons.favorite, color: Colors.red), // không hoạt động với AnimatedSwitcher
             ),
           ),
         ],
@@ -60,7 +69,10 @@ class MealDetailScreen extends ConsumerWidget {
       backgroundColor: Colors.black87,
       body: ListView(
         children: [
-          Image.network(meal.imageUrl, fit: BoxFit.cover),
+          Hero(
+            tag: meal.id,
+            child: Image.network(meal.imageUrl, fit: BoxFit.contain),
+          ),
           Text(
             'Ingredients - $count',
             textAlign: TextAlign.center,

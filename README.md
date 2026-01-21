@@ -33,7 +33,8 @@ samples, guidance on mobile development, and a full API reference.
         - Using LayoutBuilder to get size of child component(differrent from MediaQuery)
 ### Todo_app
     Includes:
-        - Understand how statelesswidget and statefulwidget works, split a screen with more with get using state can improve build performance, avoid unnecessary builds (like useMemo in reactjs)
+        - Understand how statelesswidget and statefulwidget works, split a screen with more with get using state can improve build performance, 
+        avoid unnecessary builds (like useMemo in reactjs)
         - How Flutter render: Widget tree -> Element tree -> Render tree
         - Using key in list to determine object(ValueKey, Objectkey,...)
         - Understand how object store with address , assignment vs new instance, add(), remove() method in list not change address, 
@@ -42,8 +43,16 @@ samples, guidance on mobile development, and a full API reference.
         - global Theme, using theme in other case
         - Split app to specific folder like screen, widget, model, data, provider...
         - Gridview, Inkwell, Tab-based Navigation 
-        - Route screen (scaffold to show back button - software back, back button of app, or PopScope for hard back - back button of OS, device), named screen with route name in main.dart 
+        - Route screen (scaffold to show back button - software back, back button of app, or PopScope for hard back - back button of OS, device), 
+        named screen with route name in main.dart 
         - Stack widget, lifting state up
         - Provider, StateNofifier(Nofifier in newer version), StateNotifierProvider(NotifierProvider in newer version), state management with Riverpod, combine Providers
         - In provider, when need to change state, don't use add(), revome(), instead use [...state, newElement]  or state.where(...filter with != element).toList()
-        - Explicit (you control entire animation) and Implicit(flutter controls animation) animation
+        - Explicit (you control entire animation) - use AnimationController,  and Implicit(flutter controls animation) animation - ex: AnimatedSwitcher. 
+        Typically, using Implicit animation is enough for almost case.
+        - Widget named Hero can improve UX animation (flying like a hero :3). 
+            Suitable for : thumbnail → full image, icon → detail header, card → detail page.
+            Rule: + Same tag in source and destination screen, (tag must be unique in same route)
+                  + Widget inside Hero should be the same type
+                  + 2 screen must be in differrent route. Hence, the following types can be used (Navigator.push, PageRouteBuilder, GoRouter / AutoRoute / Beamer / v.v.)
+                  + Using flightShuttleBuilder property to custom animation

@@ -20,11 +20,10 @@ class _TestAnimateState extends State<TestAnimate> with SingleTickerProviderStat
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _animationController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 1)
+        duration: Duration(seconds: 1)
     );
     _animationController.repeat();
   }

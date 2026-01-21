@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({
-    super.key,
-    required this.meal,
-    required this.toggleFavorite,
-  });
+  const MealItem({super.key, required this.meal, required this.toggleFavorite});
 
   final Meal meal;
   final void Function(Meal meal) toggleFavorite; // change to provider
@@ -38,12 +34,15 @@ class MealItem extends StatelessWidget {
         },
         child: Stack(
           children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            Hero( // use Hero widget for smooth image transition - rule: same tag in source and destination screen, widget inside Hero should be the same type
+              tag: meal.id,
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -85,11 +84,15 @@ class MealItem extends StatelessWidget {
                       children: [
                         MealItemTrait(
                           icon: Icons.girl_outlined,
-                          text: meal.isGlutenFree ? "Gluten Free" : "Contains Gluten",
+                          text: meal.isGlutenFree
+                              ? "Gluten Free"
+                              : "Contains Gluten",
                         ),
                         MealItemTrait(
                           icon: Icons.girl_rounded,
-                          text: meal.isLactoseFree ? "Lactose Free" : "Contains Lactose",
+                          text: meal.isLactoseFree
+                              ? "Lactose Free"
+                              : "Contains Lactose",
                         ),
                       ],
                     ),
@@ -102,7 +105,9 @@ class MealItem extends StatelessWidget {
                         ),
                         MealItemTrait(
                           icon: Icons.girl_outlined,
-                          text: meal.isVegetarian ? "For Vegetarian" : "Not for Vegetarian",
+                          text: meal.isVegetarian
+                              ? "For Vegetarian"
+                              : "Not for Vegetarian",
                         ),
                       ],
                     ),
