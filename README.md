@@ -38,7 +38,7 @@ samples, guidance on mobile development, and a full API reference.
         - How Flutter render: Widget tree -> Element tree -> Render tree
         - Using key in list to determine object(ValueKey, Objectkey,...)
         - Understand how object store with address , assignment vs new instance, add(), remove() method in list not change address, 
-### Expense_app
+### Meals_app
     Includes:
         - global Theme, using theme in other case
         - Split app to specific folder like screen, widget, model, data, provider...

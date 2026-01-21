@@ -6,6 +6,7 @@ import 'package:first_app/meals_app/screens/categories.dart';
 import 'package:first_app/meals_app/screens/tabs.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
 import 'package:first_app/quiz_app/util/app_metrics.dart';
+import 'package:first_app/shopping_list_app/widgets/grocery_list.dart';
 import 'package:first_app/todo_app/todo_app.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ final Map<String, WidgetBuilder> listWitget = {
 
 final Map<String, WidgetBuilder> listWitget2 = {
   'Meals App': (context) => TabScreen(),
+  'Shopping List App': (context) => GroceryList(),
 };
 
 class MainApp extends StatefulWidget {
