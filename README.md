@@ -56,3 +56,7 @@ samples, guidance on mobile development, and a full API reference.
                   + Widget inside Hero should be the same type
                   + 2 screen must be in differrent route. Hence, the following types can be used (Navigator.push, PageRouteBuilder, GoRouter / AutoRoute / Beamer / v.v.)
                   + Using flightShuttleBuilder property to custom animation
+### Shopping_app
+    Includes:
+        - Using Form widget with GlobalKey to use methods (validate, save, reset)
+        - connect to Firebase realtime database as backend service

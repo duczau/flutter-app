@@ -74,7 +74,7 @@ class _MainAppState extends State<MainApp> {
       },
       title: 'Main App',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 95, 142, 170),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 216, 191, 205),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color.fromARGB(255, 13, 134, 74),
         ),
@@ -110,6 +110,12 @@ class _MainAppState extends State<MainApp> {
             fontSize: 14,
             color: Color.fromARGB(255, 0, 0, 0),
             fontFamily: 'Roboto',
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(
+            color: const Color.fromARGB(157, 66, 66, 66),
+            fontSize: 16,
           ),
         ),
         colorScheme: ColorScheme.fromSeed(

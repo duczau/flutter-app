@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:first_app/expense_app/expense_item.dart';
 import 'package:first_app/expense_app/models/expense.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseList extends StatelessWidget {

@@ -5,6 +5,11 @@ class Category {
 
   final String title;
   final Color color;
+
+  Map<String, String> toJson() => {
+        'title': title,
+        'color': color.toString(),
+      };
 }
 
 enum Categories {
