@@ -20,8 +20,9 @@ var kDarkColorTheme = const Color.fromARGB(255, 18, 18, 18);
 var themeMode = ThemeMode.light;
 
 void main() async {
-  await dotenv.load(fileName: ".env");
+  // ✅ Thứ tự quan trọng: ensureInitialized TRƯỚC loadenv
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ProviderScope(child: MainApp()));
 }

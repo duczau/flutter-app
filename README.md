@@ -59,4 +59,7 @@ samples, guidance on mobile development, and a full API reference.
 ### Shopping_app
     Includes:
         - Using Form widget with GlobalKey to use methods (validate, save, reset)
-        - connect to Firebase realtime database as backend service
+        - connect to Firebase realtime database as backend service,(if using REST via http, append .json to the end of the URL, ex: abc.com/shopping-list.json)
+            + POST: will auto generate id with format something like -OjcxGdUm7IMBhIcKi90
+            + PUT: can define id
+        - handling errors, using FutureBuilder Widget

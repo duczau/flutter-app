@@ -6,10 +6,10 @@ class Category {
   final String title;
   final Color color;
 
-  Map<String, String> toJson() => {
-        'title': title,
-        'color': color.toString(),
-      };
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'color': color.toARGB32(), // Color → int
+  };
 }
 
 enum Categories {

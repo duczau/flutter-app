@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:first_app/shopping_list_app/data/categories.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class NewItem extends StatefulWidget {
@@ -12,35 +13,47 @@ class NewItem extends StatefulWidget {
 }
 
 class _NewItemState extends State<NewItem> {
+  final urlRoot = dotenv.env['FIREBASE_RTDB_URL'] ?? "";
+
   final _formKey = GlobalKey<FormState>();
   final Map<String, Object?> _formData = {
     'name': null,
     'quantity': null,
     'category': null,
   };
-  void _addNewItem() async {
+  void _addNewItem(String id) async {
     if (_formKey.currentState!.validate()) {
+      //Firebase Realtime Database URL as a REST endpoint. All we need to do is append .json to the end of the URL and send a request from our favorite HTTPS client.
+      final url = Uri.https(
+        urlRoot,
+        'shopping-list/$id.json',
+      );
+      // final getList = await http.get(url);
+      // print('Get data from database: ${getList.body}');
+
       // send to database
-      final url = Uri.https('flutter-demo-duczau-default-rtdb.asia-southeast1.firebasedatabase.app', '');
-      await http.post(
+      final response = await http.put(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({..._formData, 'category': (_formData['category'] as dynamic)?.title}),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(_formData),
       );
 
-      final getList = await http.get(url);
-      print('Get data from database: ${getList.body}');
-      
       _formKey.currentState!.save();
-      Navigator.of(context).pop(_formData);
+
+      // check if the widget is still mounted before using context (typically after an async operation)
+      if (!context.mounted) return;
+      
+      // for POST: json.decode(response.body)['name'] = -OjcxGdUm7IMBhIcKi90
+      // Navigator.of(context).pop({..._formData, 'id': json.decode(response.body)['name']});
+
+      // for PUT
+      Navigator.of(context).pop({..._formData, 'id': id});
       print(_formData);
     }
     //  else {
     //   _formKey.currentState!.reset();
     //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
+    //     SnackBar(  
     //       duration: Duration(seconds: 1),
     //       content: Text('Form has been reset'),
     //     ),
@@ -100,7 +113,11 @@ class _NewItemState extends State<NewItem> {
                   }
                   return null;
                 },
-                onSaved: (newValue) => _formData['name'] = newValue?.trim(),  // khong can wrap setState vi khong can rebuild UI, only save data
+                onChanged: (newValue) {
+                  // onSaved callback is called when calling _formKey.currentState!.save()
+                  _formData['name'] = newValue
+                      .trim(); // khong can wrap setState vi khong can rebuild UI, only save data
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -149,18 +166,13 @@ class _NewItemState extends State<NewItem> {
                               ],
                             ),
                           ),
-                          DropdownMenuItem(
-                            value: null,
-                            child: Row(
-                              children: [
-                                Text('None'),
-                              ],
-                            ),
-                          ),
+                        DropdownMenuItem(
+                          value: null,
+                          child: Row(children: [Text('None')]),
+                        ),
                       ],
                       onChanged: (value) {
-                        print(value?.toJson().toString());
-                        _formData['category'] = value;
+                        _formData['category'] = value?.toJson();
                       },
                     ),
                   ), // Add category selection
@@ -178,7 +190,7 @@ class _NewItemState extends State<NewItem> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      _addNewItem();
+                      _addNewItem(DateTime.now().millisecondsSinceEpoch.toString());
 
                       final context = _formKey.currentContext;
                       if (context != null) {
@@ -196,7 +208,7 @@ class _NewItemState extends State<NewItem> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: Duration(seconds: 1),
-                            content: Text(_formData.toString()),
+                            content: Text('Added: ${_formData.toString()}'),
                           ),
                         );
                       }
