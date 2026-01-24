@@ -58,7 +58,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         padding: const EdgeInsets.all(15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 3 / 2,
+          // childAspectRatio: 3 / 2, // giới hạn tỉ lệ chiều rộng/chiều cao, khiến cho item không thể giãn tự do
           mainAxisSpacing: 10,
           crossAxisSpacing: 15,
         ),
@@ -97,7 +97,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "data - ",
+                                  "data-",
                                   style: TextStyle(
                                     fontSize: sizeText,
                                     color: Theme.of(

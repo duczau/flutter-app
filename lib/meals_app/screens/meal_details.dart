@@ -57,6 +57,7 @@ class MealDetailScreen extends ConsumerWidget {
                     RotationTransition(turns: animation, child: child),
                 child: Icon(
                   isFavorite ? Icons.favorite : Icons.star,
+                  color: isFavorite ? Colors.red : Colors.white,
                   key: ValueKey(isFavorite),
                 ),
               ),
