@@ -6,9 +6,9 @@ allprojects {
 }
 
 plugins {
-    id("com.android.application") version "8.9.1" apply false
-    id("com.android.library") version "8.9.1" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.10" apply false
+    id("com.android.application") apply false
+    id("com.android.library") apply false
+    id("org.jetbrains.kotlin.android") apply false
 }
 
 val newBuildDir: Directory =
@@ -22,21 +22,21 @@ subprojects {
     project.layout.buildDirectory.value(newSubprojectBuildDir)
     
     // Fix compileSdk for dependencies like path_provider_android
-    pluginManager.withPlugin("com.android.library") {
-        configure<com.android.build.gradle.LibraryExtension> {
-            if (compileSdk == 0) {
-                compileSdk = 34
-            }
-        }
-    }
+    // pluginManager.withPlugin("com.android.library") {
+    //     configure<com.android.build.gradle.LibraryExtension> {
+    //         if (compileSdk == 0) {
+    //             compileSdk = 34
+    //         }
+    //     }
+    // }
     
-    pluginManager.withPlugin("com.android.application") {
-        configure<com.android.build.gradle.AppExtension> {
-            if (compileSdk == 0) {
-                compileSdk = 34
-            }
-        }
-    }
+    // pluginManager.withPlugin("com.android.application") {
+    //     configure<com.android.build.gradle.AppExtension> {
+    //         if (compileSdk == 0) {
+    //             compileSdk = 34
+    //         }
+    //     }
+    // }
 }
 subprojects {
     project.evaluationDependsOn(":app")
