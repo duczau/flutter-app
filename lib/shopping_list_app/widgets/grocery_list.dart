@@ -177,89 +177,92 @@ class _GroceryListState extends State<GroceryList> {
           ? loadingContent
           : RefreshIndicator(
               onRefresh: _loadItems,
-              child: _groceryItems.isEmpty
-                  ? Center(child: Text('No items found.'))
-                  : ListView.builder(
-                      itemCount: _groceryItems.length,
-                      itemBuilder: (ctx, index) {
-                        final item = _groceryItems[index];
-                        return Dismissible(
-                          secondaryBackground: Container(
-                            color: const Color.fromARGB(255, 238, 52, 19),
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const Icon(
-                                  Icons.delete_forever_rounded,
-                                  size: 20,
+              triggerMode: RefreshIndicatorTriggerMode.anywhere,
+              child: ListView(
+                // sử dụng scroll physics mặc định của từng OS, nếu muốn ép loại thì dùng parent: BouncingScrollPhysics() hoặc ClampingScrollPhysics()
+                physics: const AlwaysScrollableScrollPhysics(),
+                // itemCount: _groceryItems.length,
+                // itemBuilder: (ctx, index) {
+                children: [
+                  if (_groceryItems.isEmpty)
+                    SizedBox(height: 200, child: Center(child: Text('No items found.')))
+                  else
+                    ..._groceryItems.map((item) {
+                      return Dismissible(
+                        secondaryBackground: Container(
+                          color: const Color.fromARGB(255, 238, 52, 19),
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Icon(Icons.delete_forever_rounded, size: 20),
+                            Text('No confirm'),
+                          ],
+                        ),
+                      ),
+                      background: Container(
+                        color: const Color.fromARGB(255, 169, 201, 111),
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.warning, size: 20),
+                            Text('Confirm'),
+                          ],
+                        ),
+                      ),
+                      onDismissed: (direction) async {
+                        await _handleRemove(item.id);
+                      },
+                      confirmDismiss: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          return true;
+                        } else {
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text('Delete Item ${item.name}?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('No'),
                                 ),
-                                Text('No confirm'),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('Yes'),
+                                ),
                               ],
                             ),
+                          );
+                          return result;
+                        }
+                      },
+                      key: ValueKey(item.id),
+                      child: ListTile(
+                        title: Text(item.name),
+                        leading: CircleAvatar(
+                          backgroundColor: item.category.color,
+                          child: Text(
+                            item.category.title[0],
+                            style: const TextStyle(color: Colors.white),
                           ),
-                          background: Container(
-                            color: const Color.fromARGB(255, 169, 201, 111),
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.warning, size: 20),
-                                Text('Confirm'),
-                              ],
-                            ),
-                          ),
-                          onDismissed: (direction) async {
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          color: Theme.of(context).colorScheme.error,
+                          onPressed: () async {
                             await _handleRemove(item.id);
                           },
-                          confirmDismiss: (direction) async {
-                            if (direction == DismissDirection.endToStart) {
-                              return true;
-                            } else {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: Text('Delete Item ${item.name}?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, false),
-                                      child: const Text('No'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, true),
-                                      child: const Text('Yes'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                              return result;
-                            }
-                          },
-                          key: ValueKey(item.id),
-                          child: ListTile(
-                            title: Text(item.name),
-                            leading: CircleAvatar(
-                              backgroundColor: item.category.color,
-                              child: Text(
-                                item.category.title[0],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              color: Theme.of(context).colorScheme.error,
-                              onPressed: () async {
-                                await _handleRemove(item.id);
-                              },
-                            ),
-                            subtitle: Text(
-                              '${item.quantity}x ${item.category.title}',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                        ),
+                        subtitle: Text(
+                          '${item.quantity}x ${item.category.title}',
+                        ),
+                      ),
+                    );
+                  })
+                ]
+                // },
+              ),
             ),
     );
   }

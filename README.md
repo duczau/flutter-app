@@ -15,6 +15,8 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+lifecycle statefulWidget: createState -> constructor (State) -> initState -> didChangeDependencies-> build -> (didUpdateWidget) -> (build) -> dispose
+
 
 ### Basic_app
     Includes:
@@ -62,4 +64,7 @@ samples, guidance on mobile development, and a full API reference.
         - connect to Firebase realtime database as backend service,(if using REST via http, append .json to the end of the URL, ex: abc.com/shopping-list.json)
             + POST: will auto generate id with format something like -OjcxGdUm7IMBhIcKi90
             + PUT: can define id
-        - handling errors, using FutureBuilder Widget
+        - handling errors, using FutureBuilder Widget (If don't cache future, each build() will create NEW future - by using: 
+            late Future<User> _userFuture ;
+            _userFuture = fetchUser(); inside init method 
+            -> FutureBuilder -> future: _userFuture (instead of future: fetchUser()))
