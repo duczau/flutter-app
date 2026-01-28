@@ -21,6 +21,15 @@ class _GroceryListState extends State<GroceryList> {
   var _isLoading = true;
   var _loadingText = '';
 
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showSnackBar(String s) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text(s),
+        ),
+      );
+  }
+
   void _addNewItem() async {
     final newItem = await Navigator.of(context).push<Map<String, Object?>>(
       MaterialPageRoute(builder: (ctx) => const NewItem()),
@@ -47,23 +56,31 @@ class _GroceryListState extends State<GroceryList> {
     //fetch from database
     await Future.delayed(const Duration(milliseconds: 500));
     final url = Uri.https(urlRoot, 'shopping-list.json');
-    final getList = await http.get(url);
+    final getList;
     final List<GroceryItem> loadedItems = [];
-    if (getList.body == 'null') {
+    try {
+      getList = await http.get(url);
+      
+      if (getList.body == 'null') {
+        setState(() {
+          _groceryItems = [];
+          _isLoading = false;
+        });
+        if (!context.mounted) return;
+        _showSnackBar('No items found in the database.');
+
+        return;
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      _showSnackBar('Failed to load items.');
       setState(() {
-        _groceryItems = [];
         _isLoading = false;
       });
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 1),
-          content: Text('No items found in the database.'),
-        ),
-      );
-
-      return;
+      print(e);
+      throw Exception('Failed to load items.');
     }
+
     final extractedData = json.decode(getList.body) as Map<String, dynamic>;
     for (final item in extractedData.entries) {
       final cate = item.value['category'] as Map<String, dynamic>;
@@ -93,12 +110,7 @@ class _GroceryListState extends State<GroceryList> {
       response = await http.delete(deleteUrl);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 1),
-          content: Text('Failed to delete item.'),
-        ),
-      );
+      _showSnackBar('Failed to delete item.');
       setState(() {
         _isLoading = false;
       });
@@ -112,12 +124,7 @@ class _GroceryListState extends State<GroceryList> {
       await Future.delayed(const Duration(seconds: 1));
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 1),
-          content: Text('Failed to delete item.'),
-        ),
-      );
+      _showSnackBar('Failed to delete item.');
       // // ignore: use_build_context_synchronously
       // throw Exception('Failed to delete item.');
     }
@@ -173,97 +180,108 @@ class _GroceryListState extends State<GroceryList> {
           const SizedBox(width: 30),
         ],
       ),
-      body: _isLoading
-          ? loadingContent
-          : RefreshIndicator(
-              onRefresh: _loadItems,
-              triggerMode: RefreshIndicatorTriggerMode.anywhere,
-              child: ListView(
-                // sử dụng scroll physics mặc định của từng OS, nếu muốn ép loại thì dùng parent: BouncingScrollPhysics() hoặc ClampingScrollPhysics()
-                physics: const AlwaysScrollableScrollPhysics(),
-                // itemCount: _groceryItems.length,
-                // itemBuilder: (ctx, index) {
-                children: [
-                  if (_groceryItems.isEmpty)
-                    SizedBox(height: 200, child: Center(child: Text('No items found.')))
-                  else
-                    ..._groceryItems.map((item) {
-                      return Dismissible(
-                        secondaryBackground: Container(
-                          color: const Color.fromARGB(255, 238, 52, 19),
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const Icon(Icons.delete_forever_rounded, size: 20),
-                            Text('No confirm'),
-                          ],
-                        ),
-                      ),
-                      background: Container(
-                        color: const Color.fromARGB(255, 169, 201, 111),
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.warning, size: 20),
-                            Text('Confirm'),
-                          ],
-                        ),
-                      ),
-                      onDismissed: (direction) async {
-                        await _handleRemove(item.id);
-                      },
-                      confirmDismiss: (direction) async {
-                        if (direction == DismissDirection.endToStart) {
-                          return true;
-                        } else {
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text('Delete Item ${item.name}?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('No'),
+      body: LayoutBuilder(
+        builder: (ctx, constraints) {
+          return _isLoading
+              ? loadingContent
+              : RefreshIndicator(
+                  onRefresh: _loadItems,
+                  triggerMode: RefreshIndicatorTriggerMode.anywhere,
+                child: ListView(
+                  // sử dụng scroll physics mặc định của từng OS, nếu muốn ép loại thì dùng parent: BouncingScrollPhysics() hoặc ClampingScrollPhysics()
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  // itemCount: _groceryItems.length,
+                  // itemBuilder: (ctx, index) {
+                  children: [
+                    if (_groceryItems.isEmpty)
+                      SizedBox(
+                        height: constraints.maxHeight,
+                        child: Center(child: Text('No items found.')),
+                      )
+                    else
+                      ..._groceryItems.map((item) {
+                        return Dismissible(
+                          secondaryBackground: Container(
+                            color: const Color.fromARGB(255, 238, 52, 19),
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const Icon(
+                                  Icons.delete_forever_rounded,
+                                  size: 20,
                                 ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('Yes'),
-                                ),
+                                Text('No confirm'),
                               ],
                             ),
-                          );
-                          return result;
-                        }
-                      },
-                      key: ValueKey(item.id),
-                      child: ListTile(
-                        title: Text(item.name),
-                        leading: CircleAvatar(
-                          backgroundColor: item.category.color,
-                          child: Text(
-                            item.category.title[0],
-                            style: const TextStyle(color: Colors.white),
                           ),
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Theme.of(context).colorScheme.error,
-                          onPressed: () async {
+                          background: Container(
+                            color: const Color.fromARGB(255, 169, 201, 111),
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.warning, size: 20),
+                                Text('Confirm'),
+                              ],
+                            ),
+                          ),
+                          onDismissed: (direction) async {
                             await _handleRemove(item.id);
                           },
-                        ),
-                        subtitle: Text(
-                          '${item.quantity}x ${item.category.title}',
-                        ),
-                      ),
-                    );
-                  })
-                ]
-                // },
-              ),
-            ),
+                          confirmDismiss: (direction) async {
+                            if (direction == DismissDirection.endToStart) {
+                              return true;
+                            } else {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: Text('Delete Item ${item.name}?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text('No'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Yes'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              return result;
+                            }
+                          },
+                          key: ValueKey(item.id),
+                          child: ListTile(
+                            title: Text(item.name),
+                            leading: CircleAvatar(
+                              backgroundColor: item.category.color,
+                              child: Text(
+                                item.category.title[0],
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              color: Theme.of(context).colorScheme.error,
+                              onPressed: () async {
+                                await _handleRemove(item.id);
+                              },
+                            ),
+                            subtitle: Text(
+                              '${item.quantity}x ${item.category.title}',
+                            ),
+                          ),
+                        );
+                      }),
+                  ],
+                  // },
+                ),
+              );
+        },
+      ),
     );
   }
 }

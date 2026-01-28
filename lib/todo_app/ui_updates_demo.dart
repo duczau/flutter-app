@@ -40,38 +40,41 @@ class _UIUpdatesDemo extends State<UIUpdatesDemo> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
+            Text('Only render ButtonDemo when click'),
             ButtonDemo(),  // chia các widget con thành 1 widget riêng để tránh rebuild toàn bộ (với các complex widget)
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     TextButton(
-            //       style: TextButton.styleFrom(
-            //         foregroundColor: Colors.red,
-            //         backgroundColor: Colors.red.shade50,
-            //       ),
-            //       onPressed: () {
-            //         setState(() {
-            //           _isUnderstood = false;
-            //         });
-            //       },
-            //       child: const Text('No'),
-            //     ),
-            //     const SizedBox(width: 24),
-            //     TextButton(
-            //       style: TextButton.styleFrom(
-            //         foregroundColor: Colors.green,
-            //         backgroundColor: Colors.green.shade50,
-            //       ),
-            //       onPressed: () {
-            //         setState(() {
-            //           _isUnderstood = true;
-            //         });
-            //       },
-            //       child: const Text('Yes'),
-            //     ),
-            //   ],
-            // ),
-            // if (_isUnderstood) const Text('Awesome!'),
+            SizedBox(height: 20,),
+            Text('Render both of widget include parent and ButtonDemo'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.red.shade50,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isUnderstood = false;
+                    });
+                  },
+                  child: const Text('No'),
+                ),
+                const SizedBox(width: 24),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.green,
+                    backgroundColor: Colors.green.shade50,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isUnderstood = true;
+                    });
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            ),
+            if (_isUnderstood) const Text('Awesome!'),
           ],
         ),
       ),

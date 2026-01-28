@@ -34,6 +34,12 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     availableMeals = dummyMeals;
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("didChangeDependencies TabScreen");
+  }
+
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +104,6 @@ class _TabScreenState extends ConsumerState<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Rebuild TabScreen");
     // _filterMeals(); // Cập nhật meals khi build
     // Đọc giá trị
     // final meals = ref.watch(mealsProvider);
