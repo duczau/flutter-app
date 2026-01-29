@@ -56,6 +56,7 @@ class _InputImage extends State<InputImage> {
   @override
   Widget build(BuildContext context) {
     Widget _imageWidget = SizedBox(width: double.infinity);
+    Widget _imageRemove = SizedBox(width: 0);
 
     if (!_isLoading) {
       // "Image.file is not supported on Flutter Web. Consider using either Image.asset or Image.network instead."
@@ -64,9 +65,27 @@ class _InputImage extends State<InputImage> {
           _selectedImageBytes!,
           width: double.infinity,
         );
+        _imageRemove = TextButton.icon(
+          onPressed: () {
+            setState(() {
+              _selectedImageBytes = null;
+            });
+          },
+          label: Text('Remove Image'),
+          icon: Icon(Icons.remove_circle_outline),
+        );
       } else {
         if (_selectedImage != null) {
           _imageWidget = Image.file(_selectedImage!, width: double.infinity);
+          _imageRemove = TextButton.icon(
+            onPressed: () {
+              setState(() {
+                _selectedImage = null;
+              });
+            },
+            label: Text('Remove Image'),
+            icon: Icon(Icons.remove_circle_outline),
+          );
         }
       }
     } else {
@@ -93,10 +112,16 @@ class _InputImage extends State<InputImage> {
       child: Column(
         children: [
           _imageWidget,
-          TextButton.icon(
-            icon: Icon(Icons.camera_alt),
-            label: Text('Take image'),
-            onPressed: _takePicture,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: Icon(Icons.camera_alt),
+                label: Text('Take image'),
+                onPressed: _takePicture,
+              ),
+              _imageRemove,
+            ],
           ),
         ],
       ),

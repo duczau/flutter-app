@@ -24,7 +24,7 @@ class PlaceList extends ConsumerWidget {
           return Image.memory(place.imagePath as Uint8List);
         } else {
           return Image.file(
-            File(place.imagePath as String),
+            place.imagePath as File,
             width: double.infinity,
           );
         }

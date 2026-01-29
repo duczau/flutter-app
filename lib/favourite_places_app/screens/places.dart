@@ -14,6 +14,7 @@ class PlaceScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Places'),
+        toolbarHeight: 40,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 32),
