@@ -21,7 +21,15 @@ class _AddPlaceState extends ConsumerState<AddPlace> {
     if (textIn.trim().isEmpty) {
       return;
     }
-    ref.read(userPlaceProvider.notifier).addPlace(textIn, filePath??"");
+    ref.read(userPlaceProvider.notifier).addPlace(textIn, filePath ?? "");
+
+    if (filePath != null) {
+      ref
+          .read(asyncUserPlaceProvider.notifier)
+          .addPlaceToDB(textIn, filePath as Uint8List);
+    } else {
+      ref.read(asyncUserPlaceProvider.notifier).addPlaceToDB(textIn, null);
+    }
   }
 
   void _onAddImage(Object path) {

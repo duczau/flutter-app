@@ -1,21 +1,23 @@
 import 'dart:io';
 
+import 'package:first_app/favourite_places_app/provider/place_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class InputImage extends StatefulWidget {
+class InputImage extends ConsumerStatefulWidget {
   const InputImage({super.key, required this.onAddImage});
 
   final void Function(Object path) onAddImage;
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return _InputImage();
   }
 }
 
-class _InputImage extends State<InputImage> {
+class _InputImage extends ConsumerState<InputImage> {
   File? _selectedImage;
   Uint8List? _selectedImageBytes;
   bool _isLoading = false;

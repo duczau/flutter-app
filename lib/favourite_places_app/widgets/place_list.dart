@@ -15,7 +15,7 @@ class PlaceList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (places.isEmpty) {
-      return const Center(child: Text('No places added yet.'));
+      return Center(child: ListView(children: [Text('No places added yet.')]));
     }
 
     Widget _getImage(Place place) {
@@ -33,11 +33,12 @@ class PlaceList extends ConsumerWidget {
     }
 
     return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount: places.length,
       itemBuilder: (context, index) {
         return ListTile(
           key: ValueKey(places[index].id),
-          title: Text(places[index].title),
+          title: Text(places[index].title +' - '+ places[index].id),
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(20.0), //or 15.0
             child: _getImage(places[index]),
@@ -46,7 +47,8 @@ class PlaceList extends ConsumerWidget {
             icon: const Icon(Icons.delete),
             color: Theme.of(context).colorScheme.error,
             onPressed: () async {
-              ref.read(userPlaceProvider.notifier).removePlace(places[index]);
+              // ref.read(userPlaceProvider.notifier).removePlace(places[index]);
+              ref.read(asyncUserPlaceProvider.notifier).removePlace(places[index]);
             },
           ),
           onTap: () => Navigator.push(

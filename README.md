@@ -84,5 +84,4 @@ Includes:
 Includes:
 - Using image_picker lib - neeed add config key to */ios/Runner/Info.plist* file (following lib docs - This permission will not be requested if you always pass false for requestFullMetadata, but App Store policy requires including the plist entry.)
 - Getting current location (with some related configuration to permission settings), using Google Maps API with SDK 
-- Using sqflite to store data in database (store in app folder)
-- Using path_provider to get path of app folder
+- Sqflite to store data in database (store in app folder) - Applies to mobile only. Using hive instead of sqflite (with web platform, hive saves data in indexed db)
