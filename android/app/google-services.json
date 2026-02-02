@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "477640593911",
+    "firebase_url": "https://flutter-demo-duczau-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "flutter-demo-duczau",
+    "storage_bucket": "flutter-demo-duczau.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:477640593911:android:4c99b3e810143e76c45ef2",
+        "android_client_info": {
+          "package_name": "com.example.first_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkk4IDCvQ9a2iKtpuLkehc2XSvJeiFEkM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -85,3 +85,9 @@ Includes:
 - Using image_picker lib - neeed add config key to */ios/Runner/Info.plist* file (following lib docs - This permission will not be requested if you always pass false for requestFullMetadata, but App Store policy requires including the plist entry.)
 - Getting current location (with some related configuration to permission settings), using Google Maps API with SDK 
 - Sqflite to store data in database (store in app folder) - Applies to mobile only. Using hive instead of sqflite (with web platform, hive saves data in indexed db)
+- Hive stores data on RAM after load, neeed to re-init connection to get latest data
+
+### Chat app
+Includes:
+- Using Firebase notifications to send message to specific user
+- Using Firebase Authentication to sign in and sign out

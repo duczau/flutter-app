@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/basic_app/gradient_container.dart';
 import 'package:first_app/basic_app/styled/styled_text.dart';
 import 'package:first_app/basic_app/test_animate.dart';
+import 'package:first_app/chat_app/screens/auth_screen.dart';
 import 'package:first_app/expense_app/expenses_app.dart';
 import 'package:first_app/favourite_places_app/screens/places.dart';
 import 'package:first_app/favourite_places_app/storage/database_manager.dart';
+import 'package:first_app/firebase_options.dart';
 import 'package:first_app/meals_app/screens/categories.dart';
 import 'package:first_app/meals_app/screens/tabs.dart';
 import 'package:first_app/quiz_app/quiz_app.dart';
@@ -26,6 +29,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await DatabaseManager().init();
   runApp(const ProviderScope(child: MainApp()));
 }
@@ -42,6 +47,7 @@ final Map<String, WidgetBuilder> listWitget2 = {
   'Meals App': (context) => TabScreen(),
   'Shopping List App': (context) => GroceryList(),
   'Place List': (context) => PlaceScreen(),
+  'Chat App': (context) => AuthScreen(),
 };
 
 class MainApp extends StatefulWidget {
