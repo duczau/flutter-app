@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -13,20 +16,40 @@ class _AuthScreenState extends State<AuthScreen> {
   String? _password;
   bool _isLogin = true;
 
-  void _handleLogin() {
+  void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save(); // run onPressed method
-      showModalBottomSheet(
-        context: context,
-        builder: (ctx) => SizedBox(
-          height: 50,
-          child: Text(
-            'email: $_email, password: $_password',
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+      
+      if (_isLogin) {
+        // login
+        if (_email != null && _password != null) {
+          // login
+        }
+      } else {
+        // signup
+        try {
+          final userCredential = await _firebase.createUserWithEmailAndPassword(
+            email: _email!,
+            password: _password!,
+          );
+          print(userCredential);
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Signup Success user:$_email'),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        } on Exception catch (e) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Signup error: $e'),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -118,7 +141,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              // ElevatedButton(onPressed: () {}, child: const Text('Login')),
             ],
           ),
         ),
