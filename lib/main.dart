@@ -1,8 +1,12 @@
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/basic_app/gradient_container.dart';
 import 'package:first_app/basic_app/styled/styled_text.dart';
 import 'package:first_app/basic_app/test_animate.dart';
 import 'package:first_app/chat_app/screens/auth_screen.dart';
+import 'package:first_app/chat_app/screens/chat_screen.dart';
 import 'package:first_app/expense_app/expenses_app.dart';
 import 'package:first_app/favourite_places_app/screens/places.dart';
 import 'package:first_app/favourite_places_app/storage/database_manager.dart';
@@ -47,7 +51,21 @@ final Map<String, WidgetBuilder> listWitget2 = {
   'Meals App': (context) => TabScreen(),
   'Shopping List App': (context) => GroceryList(),
   'Place List': (context) => PlaceScreen(),
-  'Chat App': (context) => AuthScreen(),
+  'Chat App': (context) => StreamBuilder(
+    stream: FirebaseAuth.instance.authStateChanges(),
+    builder: (context, asyncSnapshot) {
+      if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (asyncSnapshot.hasData) {
+        return ChatScreen();
+      } else {
+        return AuthScreen();
+      }
+
+      // return AuthScreen();
+    },
+  ),
 };
 
 class MainApp extends StatefulWidget {

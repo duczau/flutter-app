@@ -91,3 +91,4 @@ Includes:
 Includes:
 - Using Firebase notifications to send message to specific user
 - Using Firebase Authentication to sign in and sign out
+- StreamBuilder to listen to Firebase Authentication changes,( like FutureBuilder, but it's stream)

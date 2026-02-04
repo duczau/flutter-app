@@ -19,11 +19,26 @@ class _AuthScreenState extends State<AuthScreen> {
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save(); // run onPressed method
-      
+
       if (_isLogin) {
         // login
         if (_email != null && _password != null) {
-          // login
+          try {
+            final userCredential = await _firebase.signInWithEmailAndPassword(
+              email: _email!,
+              password: _password!,
+            );
+          } on FirebaseException catch (e) {
+            // TODO
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.message ?? 'Login error'),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          }
         }
       } else {
         // signup
@@ -33,6 +48,7 @@ class _AuthScreenState extends State<AuthScreen> {
             password: _password!,
           );
           print(userCredential);
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -41,6 +57,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           );
         } on Exception catch (e) {
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
