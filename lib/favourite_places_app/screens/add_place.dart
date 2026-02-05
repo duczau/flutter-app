@@ -26,7 +26,7 @@ class _AddPlaceState extends ConsumerState<AddPlace> {
     if (filePath != null) {
       ref
           .read(asyncUserPlaceProvider.notifier)
-          .addPlaceToDB(textIn, filePath as Uint8List);
+          .addPlaceToDB(textIn, filePath);
     } else {
       ref.read(asyncUserPlaceProvider.notifier).addPlaceToDB(textIn, null);
     }

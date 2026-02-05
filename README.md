@@ -92,3 +92,6 @@ Includes:
 - Using Firebase notifications to send message to specific user
 - Using Firebase Authentication to sign in and sign out
 - StreamBuilder to listen to Firebase Authentication changes,( like FutureBuilder, but it's stream)
+    - **The difference between Stream and Future is that stream is an asynchronous sequence of data. Stream is single-subscription - Using StreamController.broadcast() or .asBroadcastStream() to create a broadcast stream for multiple listeners**
+- Firebase Storage to store file, blob (like S3) - Using Uint8List to store image instead of File (File is not supported on web platform, File only is adapter on moblie platform)
+- Firestore to store data like simple database system

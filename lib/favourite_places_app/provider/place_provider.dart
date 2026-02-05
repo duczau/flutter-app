@@ -36,9 +36,9 @@ class AsyncUserPlaceNotifier extends AsyncNotifier<List<Place>> {
     return db.places.getAll();
   }
 
-  Future<void> addPlaceToDB(String title, Uint8List? image) async {
+  Future<void> addPlaceToDB(String title, Object? image) async {
     state = AsyncLoading();
-    final newPlace = Place.autoId(title: title, imagePath: image);
+    final newPlace = Place.autoId(title: title, imagePath: image); // isWeb as Uint8List
     await db.places.put(newPlace.id, newPlace);
 
     state = AsyncData(await db.places.getAll());

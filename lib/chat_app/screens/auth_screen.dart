@@ -1,4 +1,10 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:first_app/chat_app/widget/user_image_picker.dart';
 import 'package:flutter/material.dart';
 
 final _firebase = FirebaseAuth.instance;
@@ -14,6 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _email;
   String? _password;
+  Uint8List? _selectedImage;
   bool _isLogin = true;
 
   void _handleLogin() async {
@@ -28,6 +35,14 @@ class _AuthScreenState extends State<AuthScreen> {
               email: _email!,
               password: _password!,
             );
+
+            final storageRef = await FirebaseStorage.instance
+                .ref()
+                .child("place_images")
+                .child('${userCredential.user?.email}_${DateTime.now().toIso8601String()}.png');
+            storageRef.putData(_selectedImage!, SettableMetadata(contentType: 'image/png'));
+
+            final imageUrl = await storageRef.getDownloadURL();
           } on FirebaseException catch (e) {
             // TODO
             if (!context.mounted) return;
@@ -70,6 +85,10 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  void _onAddImage(Uint8List path) {
+    _selectedImage = path;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +119,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
+                          if (!_isLogin)
+                            UserImagePicker(onAddImage: _onAddImage),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email',
