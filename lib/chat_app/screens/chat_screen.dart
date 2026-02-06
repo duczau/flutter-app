@@ -18,7 +18,9 @@ class _ChatScreenState extends State<ChatScreen> {
   int _count = 0;
   int? _streamSum;
 
-  void _titleInputHandler(String value) {
+  void _titleInputHandler(String value) async {
+    final zz = await FirebaseAuth.instance.currentUser?.getIdToken(true);
+    print(zz);
     _count = int.tryParse(value) ?? 0;
   }
 

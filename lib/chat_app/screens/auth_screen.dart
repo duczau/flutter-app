@@ -31,18 +31,14 @@ class _AuthScreenState extends State<AuthScreen> {
         // login
         if (_email != null && _password != null) {
           try {
-            final userCredential = await _firebase.signInWithEmailAndPassword(
-              email: _email!,
-              password: _password!,
-            );
-
-            final storageRef = await FirebaseStorage.instance
-                .ref()
-                .child("place_images")
-                .child('${userCredential.user?.email}_${DateTime.now().toIso8601String()}.png');
-            storageRef.putData(_selectedImage!, SettableMetadata(contentType: 'image/png'));
-
-            final imageUrl = await storageRef.getDownloadURL();
+            final userCredential = await _firebase
+                .signInWithEmailAndPassword(
+                  email: _email!,
+                  password: _password!,
+                )
+                .then((e) {
+                  print(e.credential);
+                });
           } on FirebaseException catch (e) {
             // TODO
             if (!context.mounted) return;
@@ -58,11 +54,28 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         // signup
         try {
-          final userCredential = await _firebase.createUserWithEmailAndPassword(
-            email: _email!,
-            password: _password!,
-          );
-          print(userCredential);
+          // final userCredential = await _firebase.createUserWithEmailAndPassword(
+          //   email: _email!,
+          //   password: _password!,
+          // ).onError((e, s) {
+          //   print(e);
+          //   print(s);
+
+          // });
+          // print(userCredential);
+          if (_selectedImage != null) {
+            final storageRef = await FirebaseStorage.instance
+                .ref()
+                .child("place_images")
+                .child('${_email}_${DateTime.now().toIso8601String()}.png');
+            storageRef.putData(
+              _selectedImage!,
+              SettableMetadata(contentType: 'image/png'),
+            );
+
+            final imageUrl = await storageRef.getDownloadURL();
+          }
+
           if (!context.mounted) return;
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -125,6 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             decoration: const InputDecoration(
                               labelText: 'Email',
                             ),
+                            autofocus: true,
                             style: TextStyle(color: Colors.black),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {

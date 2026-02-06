@@ -90,7 +90,9 @@ Includes:
 ### Chat app
 Includes:
 - Using Firebase notifications to send message to specific user
-- Using Firebase Authentication to sign in and sign out
+- Using Firebase Authentication to sign in and sign out 
+    - *FirebaseAuth.instance.authStateChanges() will not realize when delete user on Firebase Console (mechanism of Firebase) - can use await FirebaseAuth.instance.currentUser?.getIdToken(true) to get token and FirebaseAuth.instance.authStateChanges() will catch new event*
+    - *Or waiting for refresh token expire - new token cannot be created -> user credential will be null*
 - StreamBuilder to listen to Firebase Authentication changes,( like FutureBuilder, but it's stream)
     - **The difference between Stream and Future is that stream is an asynchronous sequence of data. Stream is single-subscription - Using StreamController.broadcast() or .asBroadcastStream() to create a broadcast stream for multiple listeners**
 - Firebase Storage to store file, blob (like S3) - Using Uint8List to store image instead of File (File is not supported on web platform, File only is adapter on moblie platform)
