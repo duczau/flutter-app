@@ -90,7 +90,10 @@ Includes:
 ### Chat app
 Includes:
 - Using Firebase notifications to send message to specific user
-- Using Firebase Authentication to sign in and sign out 
+- Using Firebase Authentication to sign in and sign out
+    - **allow read, write:**
+        - **if request.auth != null : allow user authenticated read, write**
+        - **if false/true : block/allow all read, write - false is only allow backend use Admin SDK, client cannot upload** 
     - *FirebaseAuth.instance.authStateChanges() will not realize when delete user on Firebase Console (mechanism of Firebase) - can use await FirebaseAuth.instance.currentUser?.getIdToken(true) to get token and FirebaseAuth.instance.authStateChanges() will catch new event*
     - *Or waiting for refresh token expire - new token cannot be created -> user credential will be null*
 - StreamBuilder to listen to Firebase Authentication changes,( like FutureBuilder, but it's stream)

@@ -91,6 +91,9 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
+              setState(() {
+                _streamSum = null;
+              });
               final countStream = countStreamAsList(_count);
 
               // this block code has consumed countStream ->

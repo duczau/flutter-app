@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -54,26 +55,30 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         // signup
         try {
-          // final userCredential = await _firebase.createUserWithEmailAndPassword(
-          //   email: _email!,
-          //   password: _password!,
-          // ).onError((e, s) {
-          //   print(e);
-          //   print(s);
+          final userCredential = await _firebase.createUserWithEmailAndPassword(
+            email: _email!,
+            password: _password!,
+          );
+          if (userCredential.user != null) {
+            String? imageUrl;
+            if (_selectedImage != null) {
+              final storageRef = FirebaseStorage.instance
+                  .ref()
+                  .child("place_images")
+                  .child('${_email}_${DateTime.now().toIso8601String()}.png');
+              await storageRef.putData(
+                _selectedImage!,
+                SettableMetadata(contentType: 'image/png'),
+              );
 
-          // });
-          // print(userCredential);
-          if (_selectedImage != null) {
-            final storageRef = await FirebaseStorage.instance
-                .ref()
-                .child("place_images")
-                .child('${_email}_${DateTime.now().toIso8601String()}.png');
-            storageRef.putData(
-              _selectedImage!,
-              SettableMetadata(contentType: 'image/png'),
-            );
+              imageUrl = await storageRef.getDownloadURL();
+            }
 
-            final imageUrl = await storageRef.getDownloadURL();
+            await FirebaseFirestore.instance.collection('users').doc(_email).set({
+              'email': _email,
+              'avatarUrl': imageUrl ?? '',
+            });
+            print('✅ User saved to Firestore');
           }
 
           if (!context.mounted) return;
@@ -85,12 +90,13 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           );
         } on Exception catch (e) {
+          print(e);
           if (!context.mounted) return;
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Signup error: $e'),
-              duration: const Duration(seconds: 1),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
