@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/chat_app/widget/new_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -74,7 +76,9 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("data"),
+          NewMessage(),
+          SizedBox(height: 30),
+          Text("------------------------"),
           ElevatedButton(
             onPressed: () async {
               await _firebase.signOut();
@@ -91,6 +95,20 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
+              try {
+                // await FirebaseFirestore.instance.enableNetwork();
+
+                final docs = await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc('aa')
+                    .get();
+                // .set({'ping': FieldValue.serverTimestamp()});
+                print(docs.data());
+                print('✅ Firestore ready');
+              } catch (e, st) {
+                print('❌ Firestore init test failed: $e');
+                print(st);
+              }
               setState(() {
                 _streamSum = null;
               });

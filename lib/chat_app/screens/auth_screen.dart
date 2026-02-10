@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -32,24 +33,46 @@ class _AuthScreenState extends State<AuthScreen> {
         // login
         if (_email != null && _password != null) {
           try {
-            final userCredential = await _firebase
-                .signInWithEmailAndPassword(
-                  email: _email!,
-                  password: _password!,
-                )
-                .then((e) {
-                  print(e.credential);
-                });
-          } on FirebaseException catch (e) {
-            // TODO
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(e.message ?? 'Login error'),
-                duration: const Duration(seconds: 1),
-              ),
+            final userCredential = await _firebase.signInWithEmailAndPassword(
+              email: _email!,
+              password: _password!,
             );
+
+            print('✅ Signed in: ${userCredential.user?.uid}');
+            print('💾 Saving user to Firestore...');
+            print('📍 Email: $_email');
+
+            // try {
+            //   await FirebaseFirestore.instance
+            //       .collection('_test')
+            //       .doc('ping')
+            //       .set({'ping': FieldValue.serverTimestamp()})
+            //       .timeout(
+            //         const Duration(seconds: 5),
+            //         onTimeout: () =>
+            //             throw TimeoutException('Firestore timeout'),
+            //       );
+            //   print('✅ Firestore ready');
+            // } catch (e, st) {
+            //   print('❌ Firestore init test failed: $e');
+            //   print(st);
+            // }
+            // await FirebaseFirestore.instance
+            //     .collection('users')
+            //     .doc(userCredential.user!.uid)
+            //     .set({
+            //       'email': _email,
+            //       'createdAt': FieldValue.serverTimestamp(),
+            //     });
+
+            // print('✅ User saved to Firestore');
+          } on FirebaseAuthException catch (e) {
+            print('❌ Auth error: ${e.code} - ${e.message}');
+          } on FirebaseException catch (e) {
+            print('❌ Firebase error: ${e.code} - ${e.message}');
+          } catch (e) {
+            print('❌ Error: $e');
+            print('❌ Error type: ${e.runtimeType}');
           }
         }
       } else {
@@ -72,23 +95,35 @@ class _AuthScreenState extends State<AuthScreen> {
               );
 
               imageUrl = await storageRef.getDownloadURL();
+              print('✅ Avatar uploaded: $imageUrl');
             }
 
-            await FirebaseFirestore.instance.collection('users').doc(_email).set({
-              'email': _email,
-              'avatarUrl': imageUrl ?? '',
-            });
-            print('✅ User saved to Firestore');
+            // await FirebaseFirestore.instance
+            //     .collection('users')
+            //     .doc(_email)
+            //     .set({'email': _email, 'avatarUrl': imageUrl ?? ''});
+            // print('✅ User saved to Firestore');
           }
 
-          if (!context.mounted) return;
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Signup Success user:$_email'),
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Signup Success'),
+                  content: Text('user:$_email'),
+                );
+              },
+            );
+          }
+          ;
+          // ScaffoldMessenger.of(context).clearSnackBars();
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Signup Success user:$_email'),
+          //     duration: const Duration(seconds: 1),
+          //   ),
+          // );
         } on Exception catch (e) {
           print(e);
           if (!context.mounted) return;

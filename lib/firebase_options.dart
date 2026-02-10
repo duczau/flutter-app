@@ -88,4 +88,5 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://flutter-demo-duczau-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'flutter-demo-duczau.firebasestorage.app',
   );
+
 }
