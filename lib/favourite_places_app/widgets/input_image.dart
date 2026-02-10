@@ -18,7 +18,7 @@ class InputImage extends ConsumerStatefulWidget {
 }
 
 class _InputImage extends ConsumerState<InputImage> {
-  File? _selectedImage;
+  // File? _selectedImage;
   Uint8List? _selectedImageBytes;
   bool _isLoading = false;
 
@@ -42,13 +42,13 @@ class _InputImage extends ConsumerState<InputImage> {
       return;
     }
 
-    if (kIsWeb) {
-      _selectedImageBytes = await _pickedImage.readAsBytes();
-      widget.onAddImage(_selectedImageBytes!);
-    } else {
-      _selectedImage = File(_pickedImage.path);
-      widget.onAddImage(_selectedImage!);
-    }
+    // if (kIsWeb) {
+    _selectedImageBytes = await _pickedImage.readAsBytes();
+    widget.onAddImage(_selectedImageBytes!);
+    // } else {
+    //   _selectedImage = File(_pickedImage.path);
+    //   widget.onAddImage(_selectedImage!);
+    // }
 
     setState(() {
       _isLoading = false;
@@ -62,7 +62,8 @@ class _InputImage extends ConsumerState<InputImage> {
 
     if (!_isLoading) {
       // "Image.file is not supported on Flutter Web. Consider using either Image.asset or Image.network instead."
-      if (kIsWeb && _selectedImageBytes != null) {
+      // if (kIsWeb && _selectedImageBytes != null) {
+      if (_selectedImageBytes != null) {
         _imageWidget = Image.memory(
           _selectedImageBytes!,
           width: double.infinity,
@@ -76,20 +77,21 @@ class _InputImage extends ConsumerState<InputImage> {
           label: Text('Remove Image'),
           icon: Icon(Icons.remove_circle_outline),
         );
-      } else {
-        if (_selectedImage != null) {
-          _imageWidget = Image.file(_selectedImage!, width: double.infinity);
-          _imageRemove = TextButton.icon(
-            onPressed: () {
-              setState(() {
-                _selectedImage = null;
-              });
-            },
-            label: Text('Remove Image'),
-            icon: Icon(Icons.remove_circle_outline),
-          );
-        }
       }
+      //  else {
+      //   if (_selectedImage != null) {
+      //     _imageWidget = Image.file(_selectedImage!, width: double.infinity);
+      //     _imageRemove = TextButton.icon(
+      //       onPressed: () {
+      //         setState(() {
+      //           _selectedImage = null;
+      //         });
+      //       },
+      //       label: Text('Remove Image'),
+      //       icon: Icon(Icons.remove_circle_outline),
+      //     );
+      //   }
+      // }
     } else {
       _imageWidget = Column(
         children: [

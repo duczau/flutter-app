@@ -100,3 +100,8 @@ Includes:
     - **The difference between Stream and Future is that stream is an asynchronous sequence of data. Stream is single-subscription - Using StreamController.broadcast() or .asBroadcastStream() to create a broadcast stream for multiple listeners**
 - Firebase Storage to store file, blob (like S3) - Using Uint8List to store image instead of File (File is not supported on web platform, File only is adapter on moblie platform)
 - Firestore to store data like simple database system
+    - FirebaseFirestore.instance - get **(default)** database without specifying a name, 
+    - To using other DB with specific name: 
+        - FirebaseFirestore.instanceFor(databaseId: 'dzau' // db name, 
+                                      app: Firebase.app()) // (or Firebase.app('name_app') if Firebase has more than 1 app)
+                                    

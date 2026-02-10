@@ -98,11 +98,11 @@ class _AuthScreenState extends State<AuthScreen> {
               print('✅ Avatar uploaded: $imageUrl');
             }
 
-            // await FirebaseFirestore.instance
-            //     .collection('users')
-            //     .doc(_email)
-            //     .set({'email': _email, 'avatarUrl': imageUrl ?? ''});
-            // print('✅ User saved to Firestore');
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userCredential.user!.uid)
+                .set({'email': _email, 'avatarUrl': imageUrl ?? ''});
+            print('✅ User saved to Firestore');
           }
 
           if (context.mounted) {
@@ -116,14 +116,6 @@ class _AuthScreenState extends State<AuthScreen> {
               },
             );
           }
-          ;
-          // ScaffoldMessenger.of(context).clearSnackBars();
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text('Signup Success user:$_email'),
-          //     duration: const Duration(seconds: 1),
-          //   ),
-          // );
         } on Exception catch (e) {
           print(e);
           if (!context.mounted) return;

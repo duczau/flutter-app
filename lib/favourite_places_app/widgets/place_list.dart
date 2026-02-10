@@ -20,16 +20,19 @@ class PlaceList extends ConsumerWidget {
 
     Widget _getImage(Place place) {
       if (place.imagePath != null && place.imagePath.toString().isNotEmpty) {
-        if (kIsWeb) {
-          return Image.memory(place.imagePath as Uint8List);
-        } else {
-          return Image.file(
-            place.imagePath as File,
-            width: double.infinity,
-          );
-        }
+        // if (kIsWeb) {
+        return Image.memory(place.imagePath as Uint8List);
+        // } else {
+        //   return Image.file(
+        //     place.imagePath as File,
+        //     width: double.infinity,
+        //   );
+        // }
       }
-      return Icon(Icons.emoji_emotions,color: const Color.fromARGB(179, 173, 58, 177),);
+      return Icon(
+        Icons.emoji_emotions,
+        color: const Color.fromARGB(179, 173, 58, 177),
+      );
     }
 
     return ListView.builder(
@@ -38,7 +41,7 @@ class PlaceList extends ConsumerWidget {
       itemBuilder: (context, index) {
         return ListTile(
           key: ValueKey(places[index].id),
-          title: Text(places[index].title +' - '+ places[index].id),
+          title: Text(places[index].title + ' - ' + places[index].id),
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(20.0), //or 15.0
             child: _getImage(places[index]),
@@ -48,7 +51,9 @@ class PlaceList extends ConsumerWidget {
             color: Theme.of(context).colorScheme.error,
             onPressed: () async {
               // ref.read(userPlaceProvider.notifier).removePlace(places[index]);
-              ref.read(asyncUserPlaceProvider.notifier).removePlace(places[index]);
+              ref
+                  .read(asyncUserPlaceProvider.notifier)
+                  .removePlace(places[index]);
             },
           ),
           onTap: () => Navigator.push(

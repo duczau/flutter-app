@@ -13,14 +13,14 @@ class PlaceDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget _image = SizedBox();
     if (place.imagePath != null && place.imagePath.toString().isNotEmpty) {
-      if (kIsWeb) {
-        _image = Image.memory(place.imagePath as Uint8List);
-      } else {
-        _image = Image.file(
-          File(place.imagePath as String),
-          width: double.infinity,
-        );
-      }
+      // if (kIsWeb) {
+      _image = Image.memory(place.imagePath as Uint8List);
+      // } else {
+      //   _image = Image.file(
+      //     File(place.imagePath as String),
+      //     width: double.infinity,
+      //   );
+      // }
     }
     return Scaffold(
       appBar: AppBar(title: Text(place.title)),

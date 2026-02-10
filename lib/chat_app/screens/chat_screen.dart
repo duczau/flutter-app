@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/chat_app/widget/new_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,15 +97,14 @@ class _ChatScreenState extends State<ChatScreen> {
           ElevatedButton(
             onPressed: () async {
               try {
-                // await FirebaseFirestore.instance.enableNetwork();
-
-                final docs = await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc('aa')
-                    .get();
-                // .set({'ping': FieldValue.serverTimestamp()});
-                print(docs.data());
-                print('✅ Firestore ready');
+                final docs =
+                    await FirebaseFirestore.instanceFor(
+                      databaseId: 'dzau',
+                      app: Firebase.app(),
+                    ).collection('users').doc('aa').set({
+                      'ping': FieldValue.serverTimestamp(),
+                    });
+                print(Firebase.app());
               } catch (e, st) {
                 print('❌ Firestore init test failed: $e');
                 print(st);
@@ -146,6 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ListView.builder(
                           shrinkWrap: true,
                           // physics: const NeverScrollableScrollPhysics(), // ✅ Disable scroll
+                          physics: const BouncingScrollPhysics(),
                           itemCount: values.length,
                           itemBuilder: (context, index) {
                             return ListTile(
@@ -156,6 +157,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         if (_streamSum != null ||
                             snapshot.connectionState == ConnectionState.done)
                           Text('Sum: $_streamSum'),
+                        SizedBox(height: 40),
                       ],
                     ),
                   );

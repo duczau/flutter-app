@@ -81,11 +81,11 @@ class _UserImagePickerState extends State<UserImagePicker> {
     Widget _imageWidget = SizedBox(width: double.infinity);
 
     if (_selectedImage != null) {
-      if (kIsWeb) {
-        _forcegroundImage = MemoryImage(_selectedImage as Uint8List);
-      } else {
-        _forcegroundImage = FileImage(_selectedImage as File);
-      }
+      // if (kIsWeb) {
+      _forcegroundImage = MemoryImage(_selectedImage!);
+      // } else {
+      //   _forcegroundImage = FileImage(_selectedImage as File);
+      // }
     }
 
     if (_isLoading) {

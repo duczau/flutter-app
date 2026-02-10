@@ -38,8 +38,6 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await DatabaseManager().init();
 
-  await FirebaseFirestore.instance.disableNetwork();
-  await FirebaseFirestore.instance.enableNetwork();
   runApp(const ProviderScope(child: MainApp()));
 }
 
@@ -62,8 +60,7 @@ final Map<String, WidgetBuilder> listWitget2 = {
         return const Center(child: CircularProgressIndicator());
       }
       if (asyncSnapshot.hasData) {
-        Future.delayed(const Duration(seconds: 4), () {
-        });
+        Future.delayed(const Duration(seconds: 4), () {});
         return ChatScreen();
       } else {
         return AuthScreen();
