@@ -35,7 +35,8 @@ void main() async {
   await dotenv.load(fileName: ".env");
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(name: 'first_app', options: DefaultFirebaseOptions.currentPlatform);
   await DatabaseManager().init();
 
   runApp(const ProviderScope(child: MainApp()));
@@ -54,7 +55,7 @@ final Map<String, WidgetBuilder> listWitget2 = {
   'Shopping List App': (context) => GroceryList(),
   'Place List': (context) => PlaceScreen(),
   'Chat App': (context) => StreamBuilder(
-    stream: FirebaseAuth.instance.authStateChanges(),
+    stream: FirebaseAuth.instanceFor(app: Firebase.app('first_app')).authStateChanges(),
     builder: (context, asyncSnapshot) {
       if (asyncSnapshot.connectionState == ConnectionState.waiting) {
         return const Center(child: CircularProgressIndicator());

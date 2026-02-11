@@ -9,7 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:first_app/chat_app/widget/user_image_picker.dart';
 import 'package:flutter/material.dart';
 
-final _firebase = FirebaseAuth.instance;
+final _firebase = FirebaseAuth.instanceFor(app: Firebase.app('first_app'));
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -37,42 +37,8 @@ class _AuthScreenState extends State<AuthScreen> {
               email: _email!,
               password: _password!,
             );
-
-            print('✅ Signed in: ${userCredential.user?.uid}');
-            print('💾 Saving user to Firestore...');
-            print('📍 Email: $_email');
-
-            // try {
-            //   await FirebaseFirestore.instance
-            //       .collection('_test')
-            //       .doc('ping')
-            //       .set({'ping': FieldValue.serverTimestamp()})
-            //       .timeout(
-            //         const Duration(seconds: 5),
-            //         onTimeout: () =>
-            //             throw TimeoutException('Firestore timeout'),
-            //       );
-            //   print('✅ Firestore ready');
-            // } catch (e, st) {
-            //   print('❌ Firestore init test failed: $e');
-            //   print(st);
-            // }
-            // await FirebaseFirestore.instance
-            //     .collection('users')
-            //     .doc(userCredential.user!.uid)
-            //     .set({
-            //       'email': _email,
-            //       'createdAt': FieldValue.serverTimestamp(),
-            //     });
-
-            // print('✅ User saved to Firestore');
           } on FirebaseAuthException catch (e) {
             print('❌ Auth error: ${e.code} - ${e.message}');
-          } on FirebaseException catch (e) {
-            print('❌ Firebase error: ${e.code} - ${e.message}');
-          } catch (e) {
-            print('❌ Error: $e');
-            print('❌ Error type: ${e.runtimeType}');
           }
         }
       } else {
@@ -85,7 +51,7 @@ class _AuthScreenState extends State<AuthScreen> {
           if (userCredential.user != null) {
             String? imageUrl;
             if (_selectedImage != null) {
-              final storageRef = FirebaseStorage.instance
+              final storageRef = FirebaseStorage.instanceFor(app: Firebase.app('first_app'))
                   .ref()
                   .child("place_images")
                   .child('${_email}_${DateTime.now().toIso8601String()}.png');
@@ -98,7 +64,10 @@ class _AuthScreenState extends State<AuthScreen> {
               print('✅ Avatar uploaded: $imageUrl');
             }
 
-            await FirebaseFirestore.instance
+            await FirebaseFirestore.instanceFor(
+                      databaseId: 'dzau', // db name
+                      app: Firebase.app('first_app'), // get default app
+                    )
                 .collection('users')
                 .doc(userCredential.user!.uid)
                 .set({'email': _email, 'avatarUrl': imageUrl ?? ''});

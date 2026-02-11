@@ -103,5 +103,11 @@ Includes:
     - FirebaseFirestore.instance - get **(default)** database without specifying a name, 
     - To using other DB with specific name: 
         - FirebaseFirestore.instanceFor(databaseId: 'dzau' // db name, 
-                                      app: Firebase.app()) // (or Firebase.app('name_app') if Firebase has more than 1 app)
-                                    
+                                      app: Firebase.app()) // 
+            - (or Firebase.app('flutter_app') if Firebase has more than 1 app - or define app name in main.dart
+                all of instance (like FirebaseFirestore.instance, FirebaseAuth.instance, FirebaseStorage.instance must be change to instanceFor with Firebase.app(app_name))
+            )
+            - FirebaseFirestore.instanceFor(databaseId: 'tesst', app: FirebaseFirestore.instance.app,)
+            - Firebase.apps.map((a) => a.name).toList() to get all app name
+            - If you want to use firebase with specific app_name, initialize in main.dart (await Firebase.initializeApp(name: 'first_app', options: DefaultFirebaseOptions.currentPlatform);) and use Firebase.app('first_app') in all of instance (like FirebaseFirestore.instance, FirebaseAuth.instance, FirebaseStorage.instance must be change to instanceFor with Firebase.app(app_name))
+            - Should not use both Firebase.initializeApp with multiple app_name in main to avoid conflict

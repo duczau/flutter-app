@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:first_app/chat_app/widget/chat_message.dart';
 import 'package:first_app/chat_app/widget/new_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-final _firebase = FirebaseAuth.instance;
+final _firebase = FirebaseAuth.instanceFor(app: Firebase.app('first_app'));
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -22,7 +23,7 @@ class _ChatScreenState extends State<ChatScreen> {
   int? _streamSum;
 
   void _titleInputHandler(String value) async {
-    final zz = await FirebaseAuth.instance.currentUser?.getIdToken(true);
+    final zz = await FirebaseAuth.instanceFor(app: Firebase.app('first_app')).currentUser?.getIdToken(true);
     print(zz);
     _count = int.tryParse(value) ?? 0;
   }
@@ -77,6 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          ChatMessage(),
           NewMessage(),
           SizedBox(height: 30),
           Text("------------------------"),
@@ -86,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
             },
             child: Text("Logout"),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
           TextField(
             style: TextStyle(color: Colors.black),
             controller: _costController,
@@ -96,19 +98,23 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              try {
-                final docs =
-                    await FirebaseFirestore.instanceFor(
-                      databaseId: 'dzau',
-                      app: Firebase.app(),
-                    ).collection('users').doc('aa').set({
-                      'ping': FieldValue.serverTimestamp(),
-                    });
-                print(Firebase.app());
-              } catch (e, st) {
-                print('❌ Firestore init test failed: $e');
-                print(st);
-              }
+              // try {
+              //   print(Firebase.apps.map((a) => a.name).toList());
+              //   print(Firebase.app('first_app'));
+
+              //   final docs =
+              //       await FirebaseFirestore.instanceFor(
+              //         databaseId: 'tesst',
+              //         // app: FirebaseFirestore.instance.app, // same as default app
+              //         // app: Firebase.app(),
+              //         app: Firebase.app('first_app'),
+              //       ).collection('userz').doc('zzzzs').set({
+              //         'pong': FieldValue.serverTimestamp(),
+              //       });
+              // } catch (e, st) {
+              //   print('❌ Firestore init test failed: $e');
+              //   print(st);
+              // }
               setState(() {
                 _streamSum = null;
               });
@@ -130,7 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
             },
             child: Text("Count"),
           ),
-          Expanded(
+          Flexible(
             child: StreamBuilder<List<int>>(
               stream: stream.stream,
               builder: (context, snapshot) {
