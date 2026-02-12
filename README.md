@@ -111,3 +111,17 @@ Includes:
             - Firebase.apps.map((a) => a.name).toList() to get all app name
             - If you want to use firebase with specific app_name, initialize in main.dart (await Firebase.initializeApp(name: 'first_app', options: DefaultFirebaseOptions.currentPlatform);) and use Firebase.app('first_app') in all of instance (like FirebaseFirestore.instance, FirebaseAuth.instance, FirebaseStorage.instance must be change to instanceFor with Firebase.app(app_name))
             - Should not use both Firebase.initializeApp with multiple app_name in main to avoid conflict
+- Batch deletion in chat_message.dart
+- Using Function in Firebase to run automatically code to send notification (use firebase-tools -> firebase init to create firebase project -> choose Functions -> waiting for generate code in function folder -> edit code to send notification -> firebase deploy -> enjoy). We are able to view log in firebase Function .
+
+
+### Deployment 
+Ultimately, after building and thoroughly testing your Flutter app, you might want to publish it to Google's Play Store or Apple's AppStore.
+
+Publishing to these stores is actually not really difficult but involves a couple of steps. Hence it's best to go through the official, written, step-by-step instructions for the different platforms:
+
+Publish an Android App: https://docs.flutter.dev/deployment/android
+
+Publish an iOS App: https://docs.flutter.dev/deployment/ios
+
+In those guides, you don't just learn how to publish your apps but also how to configure their icons, titles & more useful settings.
